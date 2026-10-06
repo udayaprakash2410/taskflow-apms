@@ -1,9 +1,4 @@
-import {
-  Plus,
-  MoreHorizontal,
-  Users,
-  X,
-} from "lucide-react";
+import { Plus, MoreHorizontal, Users, X } from "lucide-react";
 
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -47,11 +42,11 @@ export default function Projects() {
       setLoading(true);
       setError("");
 
-      let url = "http://localhost:5000/api/projects";
+      let url = "http://https://taskflow-apms.onrender.com/api/projects";
 
       // Employee gets only assigned projects
       if (role === "employee") {
-        url = "http://localhost:5000/api/projects/my";
+        url = "http://https://taskflow-apms.onrender.com/api/projects/my";
       }
 
       const response = await fetch(url, {
@@ -63,18 +58,14 @@ export default function Projects() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(
-          data.message || "Failed to load projects."
-        );
+        throw new Error(data.message || "Failed to load projects.");
       }
 
       setProjects(data);
     } catch (error) {
       console.error(error);
 
-      setError(
-        error.message || "Failed to load projects."
-      );
+      setError(error.message || "Failed to load projects.");
     } finally {
       setLoading(false);
     }
@@ -114,7 +105,7 @@ export default function Projects() {
       setError("");
 
       const response = await fetch(
-        "http://localhost:5000/api/projects",
+        "http://https://taskflow-apms.onrender.com/api/projects",
         {
           method: "POST",
 
@@ -124,22 +115,17 @@ export default function Projects() {
           },
 
           body: JSON.stringify(formData),
-        }
+        },
       );
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(
-          data.message || "Failed to create project."
-        );
+        throw new Error(data.message || "Failed to create project.");
       }
 
       // Add newly created project to the list
-      setProjects((previous) => [
-        data.project,
-        ...previous,
-      ]);
+      setProjects((previous) => [data.project, ...previous]);
 
       // Reset form
       setFormData({
@@ -158,9 +144,7 @@ export default function Projects() {
     } catch (error) {
       console.error(error);
 
-      setError(
-        error.message || "Failed to create project."
-      );
+      setError(error.message || "Failed to create project.");
     }
   };
 
@@ -193,14 +177,11 @@ export default function Projects() {
       return "-";
     }
 
-    return new Date(date).toLocaleDateString(
-      "en-IN",
-      {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-      }
-    );
+    return new Date(date).toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
   };
 
   // ======================================================
@@ -222,13 +203,9 @@ export default function Projects() {
   if (loading) {
     return (
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">
-          Projects
-        </h1>
+        <h1 className="text-2xl font-bold text-slate-900">Projects</h1>
 
-        <p className="mt-4 text-sm text-slate-500">
-          Loading projects...
-        </p>
+        <p className="mt-4 text-sm text-slate-500">Loading projects...</p>
       </div>
     );
   }
@@ -245,9 +222,7 @@ export default function Projects() {
 
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">
-            Projects
-          </h1>
+          <h1 className="text-2xl font-bold text-slate-900">Projects</h1>
 
           <p className="mt-1 text-sm text-slate-500">
             Plan, track, and deliver your team’s best work.
@@ -262,7 +237,6 @@ export default function Projects() {
             className="inline-flex items-center gap-2 rounded-xl bg-violet-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-violet-700"
           >
             <Plus size={18} />
-
             New project
           </button>
         )}
@@ -368,17 +342,11 @@ export default function Projects() {
                 onChange={handleChange}
                 className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm outline-none focus:border-violet-500"
               >
-                <option value="Low">
-                  Low
-                </option>
+                <option value="Low">Low</option>
 
-                <option value="Medium">
-                  Medium
-                </option>
+                <option value="Medium">Medium</option>
 
-                <option value="High">
-                  High
-                </option>
+                <option value="High">High</option>
               </select>
             </div>
 
@@ -413,21 +381,13 @@ export default function Projects() {
                 onChange={handleChange}
                 className="w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm outline-none focus:border-violet-500"
               >
-                <option value="Planning">
-                  Planning
-                </option>
+                <option value="Planning">Planning</option>
 
-                <option value="In Progress">
-                  In Progress
-                </option>
+                <option value="In Progress">In Progress</option>
 
-                <option value="Completed">
-                  Completed
-                </option>
+                <option value="Completed">Completed</option>
 
-                <option value="On Hold">
-                  On Hold
-                </option>
+                <option value="On Hold">On Hold</option>
               </select>
             </div>
 
@@ -470,9 +430,7 @@ export default function Projects() {
             <div className="flex items-end justify-end gap-3">
               <button
                 type="button"
-                onClick={() =>
-                  setShowForm(false)
-                }
+                onClick={() => setShowForm(false)}
                 className="rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50"
               >
                 Cancel
@@ -495,9 +453,7 @@ export default function Projects() {
 
       {filteredProjects.length === 0 ? (
         <div className="mt-6 rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center">
-          <h2 className="font-semibold text-slate-800">
-            No projects found
-          </h2>
+          <h2 className="font-semibold text-slate-800">No projects found</h2>
 
           <p className="mt-1 text-sm text-slate-500">
             {activeFilter === "all"
@@ -505,8 +461,8 @@ export default function Projects() {
                 ? "Create your first project to get started."
                 : "You have no projects assigned yet."
               : activeFilter === "inProgress"
-              ? "There are no projects in progress."
-              : "There are no completed projects."}
+                ? "There are no projects in progress."
+                : "There are no completed projects."}
           </p>
         </div>
       ) : (
@@ -518,8 +474,8 @@ export default function Projects() {
               project.status === "Completed"
                 ? 100
                 : project.status === "In Progress"
-                ? 50
-                : 0;
+                  ? 50
+                  : 0;
 
             return (
               <Link
@@ -535,15 +491,12 @@ export default function Projects() {
                       project.priority === "High"
                         ? "bg-red-500"
                         : project.priority === "Medium"
-                        ? "bg-yellow-500"
-                        : "bg-green-500"
+                          ? "bg-yellow-500"
+                          : "bg-green-500"
                     }`}
                   />
 
-                  <MoreHorizontal
-                    size={20}
-                    className="text-slate-400"
-                  />
+                  <MoreHorizontal size={20} className="text-slate-400" />
                 </div>
 
                 {/* NAME */}
@@ -563,16 +516,13 @@ export default function Projects() {
                 <div className="mt-4">
                   <span
                     className={`rounded-full px-2.5 py-1 text-xs font-medium ${
-                      project.status ===
-                      "Completed"
+                      project.status === "Completed"
                         ? "bg-green-50 text-green-700"
-                        : project.status ===
-                          "In Progress"
-                        ? "bg-blue-50 text-blue-700"
-                        : project.status ===
-                          "On Hold"
-                        ? "bg-red-50 text-red-700"
-                        : "bg-yellow-50 text-yellow-700"
+                        : project.status === "In Progress"
+                          ? "bg-blue-50 text-blue-700"
+                          : project.status === "On Hold"
+                            ? "bg-red-50 text-red-700"
+                            : "bg-yellow-50 text-yellow-700"
                     }`}
                   >
                     {project.status}
@@ -583,13 +533,9 @@ export default function Projects() {
 
                 <div className="mt-5">
                   <div className="mb-2 flex justify-between text-xs text-slate-500">
-                    <span>
-                      Progress
-                    </span>
+                    <span>Progress</span>
 
-                    <b className="text-slate-700">
-                      {progress}%
-                    </b>
+                    <b className="text-slate-700">{progress}%</b>
                   </div>
 
                   <div className="h-2 rounded-full bg-slate-100">
@@ -598,8 +544,8 @@ export default function Projects() {
                         progress === 100
                           ? "bg-green-500"
                           : progress > 0
-                          ? "bg-blue-500"
-                          : "bg-slate-300"
+                            ? "bg-blue-500"
+                            : "bg-slate-300"
                       }`}
                       style={{
                         width: `${progress}%`,
@@ -612,41 +558,29 @@ export default function Projects() {
 
                 <div className="mt-5 flex items-center justify-between border-t border-slate-100 pt-4">
                   <div className="flex -space-x-2">
-                    {project.members
-                      ?.slice(0, 3)
-                      .map((member) => (
-                        <span
-                          key={member._id}
-                          title={member.name}
-                          className="grid h-7 w-7 place-items-center rounded-full border-2 border-white bg-slate-200 text-[10px] font-bold text-slate-600"
-                        >
-                          {member.name
-                            ?.charAt(0)
-                            .toUpperCase()}
-                        </span>
-                      ))}
+                    {project.members?.slice(0, 3).map((member) => (
+                      <span
+                        key={member._id}
+                        title={member.name}
+                        className="grid h-7 w-7 place-items-center rounded-full border-2 border-white bg-slate-200 text-[10px] font-bold text-slate-600"
+                      >
+                        {member.name?.charAt(0).toUpperCase()}
+                      </span>
+                    ))}
 
-                    {project.members?.length >
-                      3 && (
+                    {project.members?.length > 3 && (
                       <span className="grid h-7 w-7 place-items-center rounded-full border-2 border-white bg-violet-100 text-[10px] text-violet-700">
                         <Users size={12} />
                       </span>
                     )}
 
-                    {(!project.members ||
-                      project.members.length ===
-                        0) && (
-                      <span className="text-xs text-slate-400">
-                        No members
-                      </span>
+                    {(!project.members || project.members.length === 0) && (
+                      <span className="text-xs text-slate-400">No members</span>
                     )}
                   </div>
 
                   <span className="text-xs text-slate-400">
-                    Due{" "}
-                    {formatDate(
-                      project.dueDate
-                    )}
+                    Due {formatDate(project.dueDate)}
                   </span>
                 </div>
               </Link>

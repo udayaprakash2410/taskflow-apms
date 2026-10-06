@@ -21,21 +21,18 @@ export default function Notifications() {
       setError("");
 
       const response = await fetch(
-        "http://localhost:5000/api/notifications",
+        "http://https://taskflow-apms.onrender.com/api/notifications",
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       const data = await response.json();
 
       if (!response.ok) {
-        setError(
-          data.message ||
-            "Failed to load notifications."
-        );
+        setError(data.message || "Failed to load notifications.");
         return;
       }
 
@@ -43,9 +40,7 @@ export default function Notifications() {
     } catch (error) {
       console.error(error);
 
-      setError(
-        "Cannot connect to server. Make sure the backend is running."
-      );
+      setError("Cannot connect to server. Make sure the backend is running.");
     } finally {
       setLoading(false);
     }
@@ -70,22 +65,19 @@ export default function Notifications() {
       setMarkingId(notificationId);
 
       const response = await fetch(
-        `http://localhost:5000/api/notifications/${notificationId}/read`,
+        `http://https://taskflow-apms.onrender.com/api/notifications/${notificationId}/read`,
         {
           method: "PUT",
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       const data = await response.json();
 
       if (!response.ok) {
-        setError(
-          data.message ||
-            "Failed to mark notification as read."
-        );
+        setError(data.message || "Failed to mark notification as read.");
         return;
       }
 
@@ -96,13 +88,11 @@ export default function Notifications() {
                 ...notification,
                 isRead: true,
               }
-            : notification
-        )
+            : notification,
+        ),
       );
 
-      window.dispatchEvent(
-  new Event("notificationUpdated")
-);
+      window.dispatchEvent(new Event("notificationUpdated"));
     } catch (error) {
       console.error(error);
 
@@ -122,22 +112,19 @@ export default function Notifications() {
       setError("");
 
       const response = await fetch(
-        "http://localhost:5000/api/notifications/read-all",
+        "http://https://taskflow-apms.onrender.com/api/notifications/read-all",
         {
           method: "PUT",
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       const data = await response.json();
 
       if (!response.ok) {
-        setError(
-          data.message ||
-            "Failed to mark all notifications as read."
-        );
+        setError(data.message || "Failed to mark all notifications as read.");
         return;
       }
 
@@ -145,12 +132,10 @@ export default function Notifications() {
         current.map((notification) => ({
           ...notification,
           isRead: true,
-        }))
+        })),
       );
 
-      window.dispatchEvent(
-  new Event("notificationUpdated")
-);
+      window.dispatchEvent(new Event("notificationUpdated"));
     } catch (error) {
       console.error(error);
 
@@ -179,9 +164,7 @@ export default function Notifications() {
   if (loading) {
     return (
       <div className="flex min-h-[300px] items-center justify-center">
-        <p className="text-sm text-slate-500">
-          Loading notifications...
-        </p>
+        <p className="text-sm text-slate-500">Loading notifications...</p>
       </div>
     );
   }
@@ -195,18 +178,14 @@ export default function Notifications() {
       {/* Header */}
       <div className="flex items-end justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">
-            Notifications
-          </h1>
+          <h1 className="text-2xl font-bold text-slate-900">Notifications</h1>
 
           <p className="mt-1 text-sm text-slate-500">
             Stay up to date with your work.
           </p>
         </div>
 
-        {notifications.some(
-          (notification) => !notification.isRead
-        ) && (
+        {notifications.some((notification) => !notification.isRead) && (
           <button
             onClick={markAllAsRead}
             disabled={markingAll}
@@ -214,9 +193,7 @@ export default function Notifications() {
           >
             <CheckCheck size={17} />
 
-            {markingAll
-              ? "Marking..."
-              : "Mark all read"}
+            {markingAll ? "Marking..." : "Mark all read"}
           </button>
         )}
       </div>
@@ -240,18 +217,14 @@ export default function Notifications() {
               No notifications
             </h2>
 
-            <p className="mt-1 text-sm text-slate-500">
-              You're all caught up.
-            </p>
+            <p className="mt-1 text-sm text-slate-500">You're all caught up.</p>
           </div>
         ) : (
           notifications.map((notification) => (
             <div
               key={notification._id}
               className={`flex gap-4 border-b border-slate-100 p-5 last:border-0 ${
-                !notification.isRead
-                  ? "bg-violet-50/30"
-                  : "bg-white"
+                !notification.isRead ? "bg-violet-50/30" : "bg-white"
               }`}
             >
               {/* Icon */}
@@ -284,9 +257,7 @@ export default function Notifications() {
                     </p>
 
                     <p className="mt-2 text-xs text-slate-400">
-                      {formatDate(
-                        notification.createdAt
-                      )}
+                      {formatDate(notification.createdAt)}
                     </p>
                   </div>
 
@@ -299,12 +270,8 @@ export default function Notifications() {
                 {/* Mark as read */}
                 {!notification.isRead && (
                   <button
-                    onClick={() =>
-                      markAsRead(notification._id)
-                    }
-                    disabled={
-                      markingId === notification._id
-                    }
+                    onClick={() => markAsRead(notification._id)}
+                    disabled={markingId === notification._id}
                     className="mt-3 text-xs font-semibold text-violet-600 hover:text-violet-700 disabled:opacity-50"
                   >
                     {markingId === notification._id

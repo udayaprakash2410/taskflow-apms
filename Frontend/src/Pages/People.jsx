@@ -33,20 +33,16 @@ export default function People() {
   const [error, setError] = useState("");
 
   // Selected employee
-  const [selectedEmployee, setSelectedEmployee] =
-    useState(null);
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
 
   // View modal
-  const [showViewModal, setShowViewModal] =
-    useState(false);
+  const [showViewModal, setShowViewModal] = useState(false);
 
   // Edit modal
-  const [showEditModal, setShowEditModal] =
-    useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
 
   // Delete loading
-  const [deletingId, setDeletingId] =
-    useState(null);
+  const [deletingId, setDeletingId] = useState(null);
 
   const fetchPeople = async () => {
     try {
@@ -54,42 +50,36 @@ export default function People() {
       setError("");
 
       const employeesResponse = await fetch(
-        "http://localhost:5000/api/users/employees",
+        "http://https://taskflow-apms.onrender.com/api/users/employees",
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
-      const employeesData =
-        await employeesResponse.json();
+      const employeesData = await employeesResponse.json();
 
       if (!employeesResponse.ok) {
-        throw new Error(
-          employeesData.message ||
-            "Failed to load employees"
-        );
+        throw new Error(employeesData.message || "Failed to load employees");
       }
 
       setEmployees(employeesData);
 
       if (role === "manager") {
         const hrResponse = await fetch(
-          "http://localhost:5000/api/users/hr",
+          "http://https://taskflow-apms.onrender.com/api/users/hr",
           {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          }
+          },
         );
 
         const hrData = await hrResponse.json();
 
         if (!hrResponse.ok) {
-          throw new Error(
-            hrData.message || "Failed to load HR"
-          );
+          throw new Error(hrData.message || "Failed to load HR");
         }
 
         setHrUsers(hrData);
@@ -131,10 +121,7 @@ export default function People() {
   };
 
   useEffect(() => {
-    if (
-      role === "hr" &&
-      searchParams.get("add") === "employee"
-    ) {
+    if (role === "hr" && searchParams.get("add") === "employee") {
       openForm("employee");
     }
   }, [role, searchParams]);
@@ -155,25 +142,20 @@ export default function People() {
     if (formType === "employee") {
       if (role === "manager") {
         endpoint =
-          "http://localhost:5000/api/auth/manager/add-employee";
+          "http://https://taskflow-apms.onrender.com/api/auth/manager/add-employee";
       } else if (role === "hr") {
         endpoint =
-          "http://localhost:5000/api/auth/hr/add-employee";
+          "http://https://taskflow-apms.onrender.com/api/auth/hr/add-employee";
       }
     }
 
-    if (
-      formType === "hr" &&
-      role === "manager"
-    ) {
+    if (formType === "hr" && role === "manager") {
       endpoint =
-        "http://localhost:5000/api/auth/manager/add-hr";
+        "http://https://taskflow-apms.onrender.com/api/auth/manager/add-hr";
     }
 
     if (!endpoint) {
-      setError(
-        "You are not allowed to perform this action."
-      );
+      setError("You are not allowed to perform this action.");
       return;
     }
 
@@ -195,17 +177,14 @@ export default function People() {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(
-          data.message ||
-            `Failed to create ${formType}.`
-        );
+        setError(data.message || `Failed to create ${formType}.`);
         return;
       }
 
       setMessage(
         formType === "hr"
           ? "HR added successfully."
-          : "Employee added successfully."
+          : "Employee added successfully.",
       );
 
       setName("");
@@ -214,14 +193,8 @@ export default function People() {
       setJobTitle("");
       setShowForm(false);
 
-      if (
-        searchParams.get("add") === "employee"
-      ) {
-        window.history.replaceState(
-          {},
-          "",
-          "/hr/people"
-        );
+      if (searchParams.get("add") === "employee") {
+        window.history.replaceState({}, "", "/hr/people");
       }
 
       fetchPeople();
@@ -264,15 +237,13 @@ export default function People() {
     setError("");
 
     if (!name.trim() || !email.trim()) {
-      setError(
-        "Name and email are required."
-      );
+      setError("Name and email are required.");
       return;
     }
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/users/employees/${selectedEmployee._id}`,
+        `http://https://taskflow-apms.onrender.com/api/users/employees/${selectedEmployee._id}`,
         {
           method: "PUT",
           headers: {
@@ -284,16 +255,13 @@ export default function People() {
             email: email.trim(),
             jobTitle: jobTitle.trim() || "Employee",
           }),
-        }
+        },
       );
 
       const data = await response.json();
 
       if (!response.ok) {
-        setError(
-          data.message ||
-            "Failed to update employee."
-        );
+        setError(data.message || "Failed to update employee.");
         return;
       }
 
@@ -304,17 +272,13 @@ export default function People() {
       setEmail("");
       setJobTitle("");
 
-      setMessage(
-        "Employee updated successfully."
-      );
+      setMessage("Employee updated successfully.");
 
       fetchPeople();
     } catch (err) {
       console.error(err);
 
-      setError(
-        "Cannot connect to the server."
-      );
+      setError("Cannot connect to the server.");
     }
   };
 
@@ -324,7 +288,7 @@ export default function People() {
 
   const handleDeleteEmployee = async (employee) => {
     const confirmed = window.confirm(
-      `Are you sure you want to delete ${employee.name}?`
+      `Are you sure you want to delete ${employee.name}?`,
     );
 
     if (!confirmed) {
@@ -337,55 +301,42 @@ export default function People() {
       setMessage("");
 
       const response = await fetch(
-        `http://localhost:5000/api/users/employees/${employee._id}`,
+        `http://https://taskflow-apms.onrender.com/api/users/employees/${employee._id}`,
         {
           method: "DELETE",
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       const data = await response.json();
 
       if (!response.ok) {
-        setError(
-          data.message ||
-            "Failed to delete employee."
-        );
+        setError(data.message || "Failed to delete employee.");
         return;
       }
 
-      setMessage(
-        "Employee deleted successfully."
-      );
+      setMessage("Employee deleted successfully.");
 
       fetchPeople();
     } catch (err) {
       console.error(err);
 
-      setError(
-        "Cannot connect to the server."
-      );
+      setError("Cannot connect to the server.");
     } finally {
       setDeletingId(null);
     }
   };
 
-  const filteredEmployees = employees.filter(
-    (employee) => {
-      const value = search.toLowerCase();
+  const filteredEmployees = employees.filter((employee) => {
+    const value = search.toLowerCase();
 
-      return (
-        employee.name
-          .toLowerCase()
-          .includes(value) ||
-        employee.email
-          .toLowerCase()
-          .includes(value)
-      );
-    }
-  );
+    return (
+      employee.name.toLowerCase().includes(value) ||
+      employee.email.toLowerCase().includes(value)
+    );
+  });
 
   const filteredHR = hrUsers.filter((hr) => {
     const value = search.toLowerCase();
@@ -399,13 +350,10 @@ export default function People() {
   if (role !== "manager" && role !== "hr") {
     return (
       <div className="rounded-2xl border border-slate-200 bg-white p-6">
-        <h1 className="text-xl font-bold text-slate-900">
-          People
-        </h1>
+        <h1 className="text-xl font-bold text-slate-900">People</h1>
 
         <p className="mt-2 text-sm text-slate-500">
-          People management is not available
-          for this role.
+          People management is not available for this role.
         </p>
       </div>
     );
@@ -418,9 +366,7 @@ export default function People() {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-slate-900">
-            {role === "manager"
-              ? "Team members"
-              : "Employees"}
+            {role === "manager" ? "Team members" : "Employees"}
           </h1>
 
           <p className="mt-1 text-sm text-slate-500">
@@ -432,9 +378,7 @@ export default function People() {
 
         <div className="flex flex-wrap gap-2">
           <button
-            onClick={() =>
-              openForm("employee")
-            }
+            onClick={() => openForm("employee")}
             className="inline-flex items-center gap-2 rounded-xl bg-violet-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-violet-700"
           >
             <UserPlus size={17} />
@@ -474,16 +418,12 @@ export default function People() {
       {showForm && (
         <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-5">
           <h2 className="font-bold text-slate-900">
-            {formType === "employee"
-              ? "Add new employee"
-              : "Add new HR"}
+            {formType === "employee" ? "Add new employee" : "Add new HR"}
           </h2>
 
           <p className="mt-1 text-sm text-slate-500">
             Create login credentials for the new{" "}
-            {formType === "employee"
-              ? "employee"
-              : "HR"}.
+            {formType === "employee" ? "employee" : "HR"}.
           </p>
 
           <form
@@ -493,28 +433,20 @@ export default function People() {
             <input
               type="text"
               placeholder={
-                formType === "employee"
-                  ? "Employee name"
-                  : "HR name"
+                formType === "employee" ? "Employee name" : "HR name"
               }
               value={name}
-              onChange={(e) =>
-                setName(e.target.value)
-              }
+              onChange={(e) => setName(e.target.value)}
               className="rounded-xl border border-slate-200 px-3 py-2.5 text-sm outline-none focus:border-violet-500"
             />
 
             <input
               type="email"
               placeholder={
-                formType === "employee"
-                  ? "Employee email"
-                  : "HR email"
+                formType === "employee" ? "Employee email" : "HR email"
               }
               value={email}
-              onChange={(e) =>
-                setEmail(e.target.value)
-              }
+              onChange={(e) => setEmail(e.target.value)}
               className="rounded-xl border border-slate-200 px-3 py-2.5 text-sm outline-none focus:border-violet-500"
             />
 
@@ -522,9 +454,7 @@ export default function People() {
               type="password"
               placeholder="Temporary password"
               value={password}
-              onChange={(e) =>
-                setPassword(e.target.value)
-              }
+              onChange={(e) => setPassword(e.target.value)}
               className="rounded-xl border border-slate-200 px-3 py-2.5 text-sm outline-none focus:border-violet-500"
             />
 
@@ -536,9 +466,7 @@ export default function People() {
                   : "Job role (e.g. HR Executive)"
               }
               value={jobTitle}
-              onChange={(e) =>
-                setJobTitle(e.target.value)
-              }
+              onChange={(e) => setJobTitle(e.target.value)}
               className="rounded-xl border border-slate-200 px-3 py-2.5 text-sm outline-none focus:border-violet-500"
             />
 
@@ -547,9 +475,7 @@ export default function People() {
                 type="submit"
                 className="rounded-xl bg-violet-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-violet-700"
               >
-                {formType === "employee"
-                  ? "Create employee"
-                  : "Create HR"}
+                {formType === "employee" ? "Create employee" : "Create HR"}
               </button>
 
               <button
@@ -569,16 +495,11 @@ export default function People() {
       <div className="mt-6 rounded-2xl border border-slate-200 bg-white">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 p-4">
           <div className="flex w-full max-w-sm items-center gap-2 rounded-xl bg-slate-50 px-3 py-2">
-            <Search
-              size={16}
-              className="text-slate-400"
-            />
+            <Search size={16} className="text-slate-400" />
 
             <input
               value={search}
-              onChange={(e) =>
-                setSearch(e.target.value)
-              }
+              onChange={(e) => setSearch(e.target.value)}
               placeholder="Search people..."
               className="w-full bg-transparent text-sm outline-none"
             />
@@ -586,31 +507,24 @@ export default function People() {
 
           <span className="text-sm text-slate-500">
             {role === "manager"
-              ? hrUsers.length +
-                employees.length
+              ? hrUsers.length + employees.length
               : employees.length}{" "}
             people
           </span>
         </div>
 
         {loading ? (
-          <div className="p-6 text-sm text-slate-500">
-            Loading people...
-          </div>
+          <div className="p-6 text-sm text-slate-500">Loading people...</div>
         ) : (
           <>
             {role === "manager" && (
               <div className="border-b border-slate-100">
                 <div className="p-5">
-                  <h2 className="font-bold text-slate-900">
-                    HR
-                  </h2>
+                  <h2 className="font-bold text-slate-900">HR</h2>
 
                   <p className="mt-1 text-sm text-slate-500">
                     {hrUsers.length} HR member
-                    {hrUsers.length !== 1
-                      ? "s"
-                      : ""}
+                    {hrUsers.length !== 1 ? "s" : ""}
                   </p>
                 </div>
 
@@ -626,15 +540,11 @@ export default function People() {
 
             <div>
               <div className="p-5">
-                <h2 className="font-bold text-slate-900">
-                  Employees
-                </h2>
+                <h2 className="font-bold text-slate-900">Employees</h2>
 
                 <p className="mt-1 text-sm text-slate-500">
                   {employees.length} employee
-                  {employees.length !== 1
-                    ? "s"
-                    : ""}
+                  {employees.length !== 1 ? "s" : ""}
                 </p>
               </div>
 
@@ -652,183 +562,155 @@ export default function People() {
 
       {/* VIEW MODAL */}
 
-      {showViewModal &&
-        selectedEmployee && (
-          <div className="fixed inset-0 z-50 grid place-items-center bg-black/40 p-4">
-            <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
-              <div className="flex items-center justify-between">
-                <h2 className="text-lg font-bold text-slate-900">
-                  Employee details
-                </h2>
-
-                <button
-                  onClick={() =>
-                    setShowViewModal(false)
-                  }
-                  className="rounded-lg p-2 text-slate-400 hover:bg-slate-100"
-                >
-                  <X size={19} />
-                </button>
-              </div>
-
-              <div className="mt-6 space-y-4">
-                <div>
-                  <p className="text-xs font-semibold uppercase text-slate-400">
-                    Name
-                  </p>
-                  <p className="mt-1 font-semibold text-slate-800">
-                    {selectedEmployee.name}
-                  </p>
-                </div>
-
-                <div>
-                  <p className="text-xs font-semibold uppercase text-slate-400">
-                    Email
-                  </p>
-                  <p className="mt-1 text-slate-700">
-                    {selectedEmployee.email}
-                  </p>
-                </div>
-
-                <div>
-                  <p className="text-xs font-semibold uppercase text-slate-400">
-                    Job Role
-                  </p>
-                  <p className="mt-1 text-slate-700">
-                    {selectedEmployee.jobTitle || "Employee"}
-                  </p>
-                </div>
-
-                <div>
-                  <p className="text-xs font-semibold uppercase text-slate-400">
-                    System Role
-                  </p>
-                  <span className="mt-1 inline-block rounded-full bg-violet-50 px-3 py-1 text-xs font-medium text-violet-700">
-                    {selectedEmployee.role}
-                  </span>
-                </div>
-              </div>
+      {showViewModal && selectedEmployee && (
+        <div className="fixed inset-0 z-50 grid place-items-center bg-black/40 p-4">
+          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-bold text-slate-900">
+                Employee details
+              </h2>
 
               <button
-                onClick={() =>
-                  setShowViewModal(false)
-                }
-                className="mt-6 w-full rounded-xl bg-violet-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-violet-700"
+                onClick={() => setShowViewModal(false)}
+                className="rounded-lg p-2 text-slate-400 hover:bg-slate-100"
               >
-                Close
+                <X size={19} />
               </button>
             </div>
+
+            <div className="mt-6 space-y-4">
+              <div>
+                <p className="text-xs font-semibold uppercase text-slate-400">
+                  Name
+                </p>
+                <p className="mt-1 font-semibold text-slate-800">
+                  {selectedEmployee.name}
+                </p>
+              </div>
+
+              <div>
+                <p className="text-xs font-semibold uppercase text-slate-400">
+                  Email
+                </p>
+                <p className="mt-1 text-slate-700">{selectedEmployee.email}</p>
+              </div>
+
+              <div>
+                <p className="text-xs font-semibold uppercase text-slate-400">
+                  Job Role
+                </p>
+                <p className="mt-1 text-slate-700">
+                  {selectedEmployee.jobTitle || "Employee"}
+                </p>
+              </div>
+
+              <div>
+                <p className="text-xs font-semibold uppercase text-slate-400">
+                  System Role
+                </p>
+                <span className="mt-1 inline-block rounded-full bg-violet-50 px-3 py-1 text-xs font-medium text-violet-700">
+                  {selectedEmployee.role}
+                </span>
+              </div>
+            </div>
+
+            <button
+              onClick={() => setShowViewModal(false)}
+              className="mt-6 w-full rounded-xl bg-violet-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-violet-700"
+            >
+              Close
+            </button>
           </div>
-        )}
+        </div>
+      )}
 
       {/* EDIT MODAL */}
 
-      {showEditModal &&
-        selectedEmployee && (
-          <div className="fixed inset-0 z-50 grid place-items-center bg-black/40 p-4">
-            <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
-              <div className="flex items-center justify-between">
-                <h2 className="text-lg font-bold text-slate-900">
-                  Edit employee
-                </h2>
+      {showEditModal && selectedEmployee && (
+        <div className="fixed inset-0 z-50 grid place-items-center bg-black/40 p-4">
+          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-bold text-slate-900">
+                Edit employee
+              </h2>
 
-                <button
-                  onClick={() =>
-                    setShowEditModal(false)
-                  }
-                  className="rounded-lg p-2 text-slate-400 hover:bg-slate-100"
-                >
-                  <X size={19} />
-                </button>
+              <button
+                onClick={() => setShowEditModal(false)}
+                className="rounded-lg p-2 text-slate-400 hover:bg-slate-100"
+              >
+                <X size={19} />
+              </button>
+            </div>
+
+            <form onSubmit={updateEmployee} className="mt-5 space-y-4">
+              <div>
+                <label className="text-sm font-medium text-slate-700">
+                  Name
+                </label>
+
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm outline-none focus:border-violet-500"
+                />
               </div>
 
-              <form
-                onSubmit={updateEmployee}
-                className="mt-5 space-y-4"
-              >
-                <div>
-                  <label className="text-sm font-medium text-slate-700">
-                    Name
-                  </label>
+              <div>
+                <label className="text-sm font-medium text-slate-700">
+                  Email
+                </label>
 
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={(e) =>
-                      setName(e.target.value)
-                    }
-                    className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm outline-none focus:border-violet-500"
-                  />
-                </div>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm outline-none focus:border-violet-500"
+                />
+              </div>
 
-                <div>
-                  <label className="text-sm font-medium text-slate-700">
-                    Email
-                  </label>
+              <div>
+                <label className="text-sm font-medium text-slate-700">
+                  Job Role
+                </label>
 
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) =>
-                      setEmail(e.target.value)
-                    }
-                    className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm outline-none focus:border-violet-500"
-                  />
-                </div>
+                <input
+                  type="text"
+                  value={jobTitle}
+                  onChange={(e) => setJobTitle(e.target.value)}
+                  className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm outline-none focus:border-violet-500"
+                />
+              </div>
 
-                <div>
-                  <label className="text-sm font-medium text-slate-700">
-                    Job Role
-                  </label>
+              <div className="flex gap-2 pt-2">
+                <button
+                  type="submit"
+                  className="flex-1 rounded-xl bg-violet-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-violet-700"
+                >
+                  Save changes
+                </button>
 
-                  <input
-                    type="text"
-                    value={jobTitle}
-                    onChange={(e) =>
-                      setJobTitle(e.target.value)
-                    }
-                    className="mt-1 w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm outline-none focus:border-violet-500"
-                  />
-                </div>
-
-                <div className="flex gap-2 pt-2">
-                  <button
-                    type="submit"
-                    className="flex-1 rounded-xl bg-violet-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-violet-700"
-                  >
-                    Save changes
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setShowEditModal(false)
-                    }
-                    className="rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </form>
-            </div>
+                <button
+                  type="button"
+                  onClick={() => setShowEditModal(false)}
+                  className="rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
           </div>
-        )}
+        </div>
+      )}
     </div>
   );
 }
-
 
 // ======================================================
 // PEOPLE TABLE
 // ======================================================
 
-function PeopleTable({
-  users,
-  onView,
-  onEdit,
-  onDelete,
-  deletingId,
-}) {
+function PeopleTable({ users, onView, onEdit, onDelete, deletingId }) {
   const [openMenuId, setOpenMenuId] = useState(null);
   const [menuPosition, setMenuPosition] = useState(null);
 
@@ -851,10 +733,7 @@ function PeopleTable({
     document.addEventListener("mousedown", closeMenu);
 
     return () => {
-      document.removeEventListener(
-        "mousedown",
-        closeMenu
-      );
+      document.removeEventListener("mousedown", closeMenu);
     };
   }, []);
 
@@ -869,11 +748,7 @@ function PeopleTable({
     window.addEventListener("scroll", handleScroll, true);
 
     return () => {
-      window.removeEventListener(
-        "scroll",
-        handleScroll,
-        true
-      );
+      window.removeEventListener("scroll", handleScroll, true);
     };
   }, [openMenuId]);
 
@@ -915,9 +790,7 @@ function PeopleTable({
       left,
     });
 
-    setOpenMenuId((currentId) =>
-      currentId === userId ? null : userId
-    );
+    setOpenMenuId((currentId) => (currentId === userId ? null : userId));
   };
 
   if (users.length === 0) {
@@ -933,25 +806,15 @@ function PeopleTable({
       <table className="w-full min-w-[800px] text-left">
         <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-400">
           <tr>
-            <th className="px-5 py-3 font-semibold">
-              Name
-            </th>
+            <th className="px-5 py-3 font-semibold">Name</th>
 
-            <th className="px-5 py-3 font-semibold">
-              Email
-            </th>
+            <th className="px-5 py-3 font-semibold">Email</th>
 
-            <th className="px-5 py-3 font-semibold">
-              Job Role
-            </th>
+            <th className="px-5 py-3 font-semibold">Job Role</th>
 
-            <th className="px-5 py-3 font-semibold">
-              System Role
-            </th>
+            <th className="px-5 py-3 font-semibold">System Role</th>
 
-            <th className="px-5 py-3 text-right font-semibold">
-              Actions
-            </th>
+            <th className="px-5 py-3 text-right font-semibold">Actions</th>
           </tr>
         </thead>
 
@@ -965,10 +828,7 @@ function PeopleTable({
               .toUpperCase();
 
             return (
-              <tr
-                key={user._id}
-                className="border-t border-slate-100"
-              >
+              <tr key={user._id} className="border-t border-slate-100">
                 <td className="px-5 py-4">
                   <div className="flex items-center gap-3">
                     <span className="grid h-9 w-9 place-items-center rounded-full bg-violet-100 text-xs font-bold text-violet-700">
@@ -1000,16 +860,9 @@ function PeopleTable({
                 <td className="px-5 py-4 text-right">
                   <button
                     type="button"
-                    onClick={(event) =>
-                      openActionsMenu(
-                        event,
-                        user._id
-                      )
-                    }
+                    onClick={(event) => openActionsMenu(event, user._id)}
                     aria-label={`Open actions for ${user.name}`}
-                    aria-expanded={
-                      openMenuId === user._id
-                    }
+                    aria-expanded={openMenuId === user._id}
                     className="rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-600 focus:outline-none focus:ring-2 focus:ring-violet-500"
                   >
                     <MoreHorizontal size={19} />
@@ -1025,9 +878,7 @@ function PeopleTable({
       {openMenuId &&
         menuPosition &&
         (() => {
-          const selectedUser = users.find(
-            (user) => user._id === openMenuId
-          );
+          const selectedUser = users.find((user) => user._id === openMenuId);
 
           if (!selectedUser) return null;
 
@@ -1071,9 +922,7 @@ function PeopleTable({
               {/* DELETE */}
               <button
                 type="button"
-                disabled={
-                  deletingId === selectedUser._id
-                }
+                disabled={deletingId === selectedUser._id}
                 onClick={() => {
                   setOpenMenuId(null);
                   setMenuPosition(null);

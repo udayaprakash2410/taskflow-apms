@@ -17,12 +17,7 @@ const style = {
   Completed: "bg-emerald-50 text-emerald-700",
 };
 
-const statuses = [
-  "To Do",
-  "In Progress",
-  "Review",
-  "Completed",
-];
+const statuses = ["To Do", "In Progress", "Review", "Completed"];
 
 export default function MyTasks() {
   const { role, currentUser, token } = useWorkspace();
@@ -61,96 +56,99 @@ export default function MyTasks() {
   const filteredWorkItems = workItems.filter((task) => {
     const assigneeId = task.assignedTo?._id || task.assignedTo || "";
     const createTask = async (event) => {
-    event.preventDefault();
+      event.preventDefault();
 
-    if (
-      !taskForm.title.trim() ||
-      !taskForm.description.trim() ||
-      !taskForm.projectId ||
-      !taskForm.startDate ||
-      !taskForm.dueDate
-    ) {
-      setError("Please fill all required task fields.");
-      return;
-    }
-
-    if (new Date(taskForm.dueDate) < new Date(taskForm.startDate)) {
-      setError("Due date cannot be before start date.");
-      return;
-    }
-
-    try {
-      setSavingTask(true);
-      setError("");
-      setNotice("");
-
-      const response = await fetch("http://localhost:5000/api/tasks", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(taskForm),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to create task.");
+      if (
+        !taskForm.title.trim() ||
+        !taskForm.description.trim() ||
+        !taskForm.projectId ||
+        !taskForm.startDate ||
+        !taskForm.dueDate
+      ) {
+        setError("Please fill all required task fields.");
+        return;
       }
 
-      let createdTask = data.task;
+      if (new Date(taskForm.dueDate) < new Date(taskForm.startDate)) {
+        setError("Due date cannot be before start date.");
+        return;
+      }
 
-      if (selectedAssignee) {
-        const assignResponse = await fetch(
-          `http://localhost:5000/api/tasks/${createdTask._id}/assign`,
+      try {
+        setSavingTask(true);
+        setError("");
+        setNotice("");
+
+        const response = await fetch(
+          "http://https://taskflow-apms.onrender.com/api/tasks",
           {
-            method: "PUT",
+            method: "POST",
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify({ employeeId: selectedAssignee }),
-          }
+            body: JSON.stringify(taskForm),
+          },
         );
 
-        const assignData = await assignResponse.json();
+        const data = await response.json();
 
-        if (!assignResponse.ok) {
-          throw new Error(assignData.message || "Task assignment failed.");
+        if (!response.ok) {
+          throw new Error(data.message || "Failed to create task.");
         }
 
-        createdTask = assignData.task;
+        let createdTask = data.task;
+
+        if (selectedAssignee) {
+          const assignResponse = await fetch(
+            `http://https://taskflow-apms.onrender.com/api/tasks/${createdTask._id}/assign`,
+            {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({ employeeId: selectedAssignee }),
+            },
+          );
+
+          const assignData = await assignResponse.json();
+
+          if (!assignResponse.ok) {
+            throw new Error(assignData.message || "Task assignment failed.");
+          }
+
+          createdTask = assignData.task;
+        }
+
+        setWorkItems((items) => [createdTask, ...items]);
+        setTaskForm({
+          title: "",
+          description: "",
+          projectId: "",
+          priority: "Medium",
+          status: "Not Started",
+          startDate: "",
+          dueDate: "",
+        });
+        setSelectedAssignee("");
+        setShowTaskForm(false);
+        setNotice("Task created successfully.");
+      } catch (err) {
+        console.error("Create task error:", err);
+        setError(err.message || "Failed to create task.");
+      } finally {
+        setSavingTask(false);
       }
+    };
 
-      setWorkItems((items) => [createdTask, ...items]);
-      setTaskForm({
-        title: "",
-        description: "",
-        projectId: "",
-        priority: "Medium",
-        status: "Not Started",
-        startDate: "",
-        dueDate: "",
-      });
-      setSelectedAssignee("");
-      setShowTaskForm(false);
-      setNotice("Task created successfully.");
-    } catch (err) {
-      console.error("Create task error:", err);
-      setError(err.message || "Failed to create task.");
-    } finally {
-      setSavingTask(false);
-    }
-  };
+    const clearFilters = () => {
+      setFilterStatus("All");
+      setFilterPriority("All");
+      setFilterAssignee("All");
+    };
 
-  const clearFilters = () => {
-    setFilterStatus("All");
-    setFilterPriority("All");
-    setFilterAssignee("All");
-  };
-
-  return (
+    return (
       (filterStatus === "All" || task.status === filterStatus) &&
       (filterPriority === "All" || task.priority === filterPriority) &&
       (filterAssignee === "All" ||
@@ -163,10 +161,7 @@ export default function MyTasks() {
   // ======================================================
 
   useEffect(() => {
-    if (
-      !token ||
-      (role !== "employee" && role !== "manager")
-    ) {
+    if (!token || (role !== "employee" && role !== "manager")) {
       return;
     }
 
@@ -177,22 +172,20 @@ export default function MyTasks() {
 
         const response = await fetch(
           role === "employee"
-            ? "http://localhost:5000/api/tasks/my"
-            : "http://localhost:5000/api/tasks",
+            ? "http://https://taskflow-apms.onrender.com/api/tasks/my"
+            : "http://https://taskflow-apms.onrender.com/api/tasks",
           {
             method: "GET",
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          }
+          },
         );
 
         const data = await response.json();
 
         if (!response.ok) {
-          throw new Error(
-            data.message || "Failed to load tasks."
-          );
+          throw new Error(data.message || "Failed to load tasks.");
         }
 
         if (role === "employee") {
@@ -205,9 +198,7 @@ export default function MyTasks() {
       } catch (error) {
         console.error("Get tasks error:", error);
 
-        setError(
-          error.message || "Failed to load tasks."
-        );
+        setError(error.message || "Failed to load tasks.");
       } finally {
         setLoading(false);
       }
@@ -217,10 +208,10 @@ export default function MyTasks() {
 
     if (role === "manager") {
       Promise.all([
-        fetch("http://localhost:5000/api/projects", {
+        fetch("http://https://taskflow-apms.onrender.com/api/projects", {
           headers: { Authorization: `Bearer ${token}` },
         }),
-        fetch("http://localhost:5000/api/users/employees", {
+        fetch("http://https://taskflow-apms.onrender.com/api/users/employees", {
           headers: { Authorization: `Bearer ${token}` },
         }),
       ])
@@ -238,17 +229,14 @@ export default function MyTasks() {
   // EMPLOYEE → UPDATE TASK STATUS
   // ======================================================
 
-  const updateEmployeeTaskStatus = async (
-    taskId,
-    status
-  ) => {
+  const updateEmployeeTaskStatus = async (taskId, status) => {
     try {
       setUpdatingTaskId(taskId);
       setNotice("");
       setError("");
 
       const response = await fetch(
-        `http://localhost:5000/api/tasks/${taskId}/status`,
+        `http://https://taskflow-apms.onrender.com/api/tasks/${taskId}/status`,
         {
           method: "PUT",
           headers: {
@@ -258,35 +246,25 @@ export default function MyTasks() {
           body: JSON.stringify({
             status,
           }),
-        }
+        },
       );
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(
-          data.message || "Failed to update task status."
-        );
+        throw new Error(data.message || "Failed to update task status.");
       }
 
       // Update the task returned by backend
       setEmployeeTasks((currentTasks) =>
-        currentTasks.map((task) =>
-          task._id === taskId ? data.task : task
-        )
+        currentTasks.map((task) => (task._id === taskId ? data.task : task)),
       );
 
       setNotice("Task status updated successfully.");
     } catch (error) {
-      console.error(
-        "Update task status error:",
-        error
-      );
+      console.error("Update task status error:", error);
 
-      setError(
-        error.message ||
-          "Failed to update task status."
-      );
+      setError(error.message || "Failed to update task status.");
     } finally {
       setUpdatingTaskId(null);
     }
@@ -316,14 +294,17 @@ export default function MyTasks() {
       setError("");
       setNotice("");
 
-      const response = await fetch("http://localhost:5000/api/tasks", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+      const response = await fetch(
+        "http://https://taskflow-apms.onrender.com/api/tasks",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(taskForm),
         },
-        body: JSON.stringify(taskForm),
-      });
+      );
 
       const data = await response.json();
 
@@ -335,7 +316,7 @@ export default function MyTasks() {
 
       if (selectedAssignee) {
         const assignResponse = await fetch(
-          `http://localhost:5000/api/tasks/${createdTask._id}/assign`,
+          `http://https://taskflow-apms.onrender.com/api/tasks/${createdTask._id}/assign`,
           {
             method: "PUT",
             headers: {
@@ -343,7 +324,7 @@ export default function MyTasks() {
               Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({ employeeId: selectedAssignee }),
-          }
+          },
         );
 
         const assignData = await assignResponse.json();
@@ -521,9 +502,7 @@ export default function MyTasks() {
 
       {loading && (
         <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-8 text-center">
-          <p className="text-sm text-slate-500">
-            Loading tasks...
-          </p>
+          <p className="text-sm text-slate-500">Loading tasks...</p>
         </div>
       )}
 
@@ -531,44 +510,33 @@ export default function MyTasks() {
           EMPLOYEE EMPTY
       ================================================== */}
 
-      {role === "employee" &&
-        !loading &&
-        employeeTasks.length === 0 && (
-          <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-10 text-center">
-            <p className="font-semibold text-slate-700">
-              No tasks assigned
-            </p>
+      {role === "employee" && !loading && employeeTasks.length === 0 && (
+        <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-10 text-center">
+          <p className="font-semibold text-slate-700">No tasks assigned</p>
 
-            <p className="mt-1 text-sm text-slate-400">
-              Tasks assigned to you will appear here.
-            </p>
-          </div>
-        )}
+          <p className="mt-1 text-sm text-slate-400">
+            Tasks assigned to you will appear here.
+          </p>
+        </div>
+      )}
 
-      {role === "manager" &&
-        !loading &&
-        filteredWorkItems.length === 0 && (
-          <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-10 text-center">
-            <p className="font-semibold text-slate-700">
-              No tasks available
-            </p>
+      {role === "manager" && !loading && filteredWorkItems.length === 0 && (
+        <div className="mt-6 rounded-2xl border border-slate-200 bg-white p-10 text-center">
+          <p className="font-semibold text-slate-700">No tasks available</p>
 
-            <p className="mt-1 text-sm text-slate-400">
-              Create a task to start tracking project work.
-            </p>
-          </div>
-        )}
+          <p className="mt-1 text-sm text-slate-400">
+            Create a task to start tracking project work.
+          </p>
+        </div>
+      )}
 
       {/* ==================================================
           TASK TABLE
       ================================================== */}
 
-      {((role === "employee" &&
-        employeeTasks.length > 0) ||
-        (role === "manager" &&
-          filteredWorkItems.length > 0)) && (
+      {((role === "employee" && employeeTasks.length > 0) ||
+        (role === "manager" && filteredWorkItems.length > 0)) && (
         <div className="mt-6 overflow-hidden rounded-2xl border border-slate-200 bg-white">
-
           {/* TABLE HEADER */}
 
           <div className="hidden grid-cols-[2fr_1fr_1fr_1fr] gap-4 border-b border-slate-100 bg-slate-50 px-5 py-3 text-xs font-bold uppercase tracking-wide text-slate-400 md:grid">
@@ -591,96 +559,101 @@ export default function MyTasks() {
                 "You";
 
               const createTask = async (event) => {
-    event.preventDefault();
+                event.preventDefault();
 
-    if (
-      !taskForm.title.trim() ||
-      !taskForm.description.trim() ||
-      !taskForm.projectId ||
-      !taskForm.startDate ||
-      !taskForm.dueDate
-    ) {
-      setError("Please fill all required task fields.");
-      return;
-    }
+                if (
+                  !taskForm.title.trim() ||
+                  !taskForm.description.trim() ||
+                  !taskForm.projectId ||
+                  !taskForm.startDate ||
+                  !taskForm.dueDate
+                ) {
+                  setError("Please fill all required task fields.");
+                  return;
+                }
 
-    if (new Date(taskForm.dueDate) < new Date(taskForm.startDate)) {
-      setError("Due date cannot be before start date.");
-      return;
-    }
+                if (new Date(taskForm.dueDate) < new Date(taskForm.startDate)) {
+                  setError("Due date cannot be before start date.");
+                  return;
+                }
 
-    try {
-      setSavingTask(true);
-      setError("");
-      setNotice("");
+                try {
+                  setSavingTask(true);
+                  setError("");
+                  setNotice("");
 
-      const response = await fetch("http://localhost:5000/api/tasks", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(taskForm),
-      });
+                  const response = await fetch(
+                    "http://https://taskflow-apms.onrender.com/api/tasks",
+                    {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                      },
+                      body: JSON.stringify(taskForm),
+                    },
+                  );
 
-      const data = await response.json();
+                  const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to create task.");
-      }
+                  if (!response.ok) {
+                    throw new Error(data.message || "Failed to create task.");
+                  }
 
-      let createdTask = data.task;
+                  let createdTask = data.task;
 
-      if (selectedAssignee) {
-        const assignResponse = await fetch(
-          `http://localhost:5000/api/tasks/${createdTask._id}/assign`,
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({ employeeId: selectedAssignee }),
-          }
-        );
+                  if (selectedAssignee) {
+                    const assignResponse = await fetch(
+                      `http://https://taskflow-apms.onrender.com/api/tasks/${createdTask._id}/assign`,
+                      {
+                        method: "PUT",
+                        headers: {
+                          "Content-Type": "application/json",
+                          Authorization: `Bearer ${token}`,
+                        },
+                        body: JSON.stringify({ employeeId: selectedAssignee }),
+                      },
+                    );
 
-        const assignData = await assignResponse.json();
+                    const assignData = await assignResponse.json();
 
-        if (!assignResponse.ok) {
-          throw new Error(assignData.message || "Task assignment failed.");
-        }
+                    if (!assignResponse.ok) {
+                      throw new Error(
+                        assignData.message || "Task assignment failed.",
+                      );
+                    }
 
-        createdTask = assignData.task;
-      }
+                    createdTask = assignData.task;
+                  }
 
-      setWorkItems((items) => [createdTask, ...items]);
-      setTaskForm({
-        title: "",
-        description: "",
-        projectId: "",
-        priority: "Medium",
-        status: "Not Started",
-        startDate: "",
-        dueDate: "",
-      });
-      setSelectedAssignee("");
-      setShowTaskForm(false);
-      setNotice("Task created successfully.");
-    } catch (err) {
-      console.error("Create task error:", err);
-      setError(err.message || "Failed to create task.");
-    } finally {
-      setSavingTask(false);
-    }
-  };
+                  setWorkItems((items) => [createdTask, ...items]);
+                  setTaskForm({
+                    title: "",
+                    description: "",
+                    projectId: "",
+                    priority: "Medium",
+                    status: "Not Started",
+                    startDate: "",
+                    dueDate: "",
+                  });
+                  setSelectedAssignee("");
+                  setShowTaskForm(false);
+                  setNotice("Task created successfully.");
+                } catch (err) {
+                  console.error("Create task error:", err);
+                  setError(err.message || "Failed to create task.");
+                } finally {
+                  setSavingTask(false);
+                }
+              };
 
-  const clearFilters = () => {
-    setFilterStatus("All");
-    setFilterPriority("All");
-    setFilterAssignee("All");
-  };
+              const clearFilters = () => {
+                setFilterStatus("All");
+                setFilterPriority("All");
+                setFilterAssignee("All");
+              };
 
-  return (
+              return (
                 <div
                   key={task._id}
                   className="grid gap-3 border-b border-slate-100 px-5 py-4 last:border-0 md:grid-cols-[2fr_1fr_1fr_1fr] md:items-center"
@@ -688,9 +661,7 @@ export default function MyTasks() {
                   {/* TASK */}
 
                   <div>
-                    <p className="font-medium text-slate-800">
-                      {task.title}
-                    </p>
+                    <p className="font-medium text-slate-800">{task.title}</p>
 
                     <p className="mt-1 text-xs text-slate-400">
                       {task.description}
@@ -703,9 +674,7 @@ export default function MyTasks() {
 
                       <button
                         onClick={() =>
-                          setNotice(
-                            "Comment composer opened for this task."
-                          )
+                          setNotice("Comment composer opened for this task.")
                         }
                         className="inline-flex items-center gap-1 rounded bg-slate-100 px-2 py-0.5 text-xs text-slate-600"
                       >
@@ -716,7 +685,7 @@ export default function MyTasks() {
                       <button
                         onClick={() =>
                           setNotice(
-                            "Attachment feature will be connected later."
+                            "Attachment feature will be connected later.",
                           )
                         }
                         className="inline-flex items-center gap-1 rounded bg-slate-100 px-2 py-0.5 text-xs text-slate-600"
@@ -729,9 +698,7 @@ export default function MyTasks() {
                     <p className="mt-2 text-xs text-slate-400">
                       Project:{" "}
                       <span className="font-medium text-slate-500">
-                        {task.projectName ||
-                          task.project?.name ||
-                          "-"}
+                        {task.projectName || task.project?.name || "-"}
                       </span>
                     </p>
                   </div>
@@ -740,9 +707,7 @@ export default function MyTasks() {
 
                   <div className="flex items-center gap-2 text-sm text-slate-600">
                     <span className="grid h-7 w-7 place-items-center rounded-full bg-slate-100 text-[10px] font-bold">
-                      {employeeName
-                        ?.charAt(0)
-                        ?.toUpperCase()}
+                      {employeeName?.charAt(0)?.toUpperCase()}
                     </span>
 
                     {employeeName}
@@ -753,25 +718,16 @@ export default function MyTasks() {
                   <span>
                     <select
                       value={task.status}
-                      disabled={
-                        updatingTaskId === task._id
-                      }
+                      disabled={updatingTaskId === task._id}
                       onChange={(event) =>
-                        updateEmployeeTaskStatus(
-                          task._id,
-                          event.target.value
-                        )
+                        updateEmployeeTaskStatus(task._id, event.target.value)
                       }
                       className={`rounded-full px-2.5 py-1 text-xs font-medium outline-none disabled:cursor-not-allowed disabled:opacity-50 ${
-                        style[task.status] ||
-                        style["To Do"]
+                        style[task.status] || style["To Do"]
                       }`}
                     >
                       {statuses.map((status) => (
-                        <option
-                          key={status}
-                          value={status}
-                        >
+                        <option key={status} value={status}>
                           {status}
                         </option>
                       ))}
@@ -790,16 +746,11 @@ export default function MyTasks() {
                     <CalendarClock size={15} />
 
                     {task.dueDate
-                      ? new Date(
-                          task.dueDate
-                        ).toLocaleDateString(
-                          "en-IN",
-                          {
-                            day: "2-digit",
-                            month: "short",
-                            year: "numeric",
-                          }
-                        )
+                      ? new Date(task.dueDate).toLocaleDateString("en-IN", {
+                          day: "2-digit",
+                          month: "short",
+                          year: "numeric",
+                        })
                       : "-"}
                   </span>
                 </div>
@@ -813,101 +764,104 @@ export default function MyTasks() {
           {role === "manager" &&
             filteredWorkItems.map((task) => {
               const employeeName =
-                task.assignedToName ||
-                task.assignedTo?.name ||
-                "Unassigned";
+                task.assignedToName || task.assignedTo?.name || "Unassigned";
 
               const createTask = async (event) => {
-    event.preventDefault();
+                event.preventDefault();
 
-    if (
-      !taskForm.title.trim() ||
-      !taskForm.description.trim() ||
-      !taskForm.projectId ||
-      !taskForm.startDate ||
-      !taskForm.dueDate
-    ) {
-      setError("Please fill all required task fields.");
-      return;
-    }
+                if (
+                  !taskForm.title.trim() ||
+                  !taskForm.description.trim() ||
+                  !taskForm.projectId ||
+                  !taskForm.startDate ||
+                  !taskForm.dueDate
+                ) {
+                  setError("Please fill all required task fields.");
+                  return;
+                }
 
-    if (new Date(taskForm.dueDate) < new Date(taskForm.startDate)) {
-      setError("Due date cannot be before start date.");
-      return;
-    }
+                if (new Date(taskForm.dueDate) < new Date(taskForm.startDate)) {
+                  setError("Due date cannot be before start date.");
+                  return;
+                }
 
-    try {
-      setSavingTask(true);
-      setError("");
-      setNotice("");
+                try {
+                  setSavingTask(true);
+                  setError("");
+                  setNotice("");
 
-      const response = await fetch("http://localhost:5000/api/tasks", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(taskForm),
-      });
+                  const response = await fetch(
+                    "http://https://taskflow-apms.onrender.com/api/tasks",
+                    {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                      },
+                      body: JSON.stringify(taskForm),
+                    },
+                  );
 
-      const data = await response.json();
+                  const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to create task.");
-      }
+                  if (!response.ok) {
+                    throw new Error(data.message || "Failed to create task.");
+                  }
 
-      let createdTask = data.task;
+                  let createdTask = data.task;
 
-      if (selectedAssignee) {
-        const assignResponse = await fetch(
-          `http://localhost:5000/api/tasks/${createdTask._id}/assign`,
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({ employeeId: selectedAssignee }),
-          }
-        );
+                  if (selectedAssignee) {
+                    const assignResponse = await fetch(
+                      `http://https://taskflow-apms.onrender.com/api/tasks/${createdTask._id}/assign`,
+                      {
+                        method: "PUT",
+                        headers: {
+                          "Content-Type": "application/json",
+                          Authorization: `Bearer ${token}`,
+                        },
+                        body: JSON.stringify({ employeeId: selectedAssignee }),
+                      },
+                    );
 
-        const assignData = await assignResponse.json();
+                    const assignData = await assignResponse.json();
 
-        if (!assignResponse.ok) {
-          throw new Error(assignData.message || "Task assignment failed.");
-        }
+                    if (!assignResponse.ok) {
+                      throw new Error(
+                        assignData.message || "Task assignment failed.",
+                      );
+                    }
 
-        createdTask = assignData.task;
-      }
+                    createdTask = assignData.task;
+                  }
 
-      setWorkItems((items) => [createdTask, ...items]);
-      setTaskForm({
-        title: "",
-        description: "",
-        projectId: "",
-        priority: "Medium",
-        status: "Not Started",
-        startDate: "",
-        dueDate: "",
-      });
-      setSelectedAssignee("");
-      setShowTaskForm(false);
-      setNotice("Task created successfully.");
-    } catch (err) {
-      console.error("Create task error:", err);
-      setError(err.message || "Failed to create task.");
-    } finally {
-      setSavingTask(false);
-    }
-  };
+                  setWorkItems((items) => [createdTask, ...items]);
+                  setTaskForm({
+                    title: "",
+                    description: "",
+                    projectId: "",
+                    priority: "Medium",
+                    status: "Not Started",
+                    startDate: "",
+                    dueDate: "",
+                  });
+                  setSelectedAssignee("");
+                  setShowTaskForm(false);
+                  setNotice("Task created successfully.");
+                } catch (err) {
+                  console.error("Create task error:", err);
+                  setError(err.message || "Failed to create task.");
+                } finally {
+                  setSavingTask(false);
+                }
+              };
 
-  const clearFilters = () => {
-    setFilterStatus("All");
-    setFilterPriority("All");
-    setFilterAssignee("All");
-  };
+              const clearFilters = () => {
+                setFilterStatus("All");
+                setFilterPriority("All");
+                setFilterAssignee("All");
+              };
 
-  return (
+              return (
                 <div
                   key={task._id}
                   className="grid gap-3 border-b border-slate-100 px-5 py-4 last:border-0 md:grid-cols-[2fr_1fr_1fr_1fr] md:items-center"
@@ -915,9 +869,7 @@ export default function MyTasks() {
                   {/* TASK */}
 
                   <div>
-                    <p className="font-medium text-slate-800">
-                      {task.title}
-                    </p>
+                    <p className="font-medium text-slate-800">{task.title}</p>
 
                     <div className="mt-2 flex flex-wrap gap-1">
                       <span className="rounded bg-violet-50 px-2 py-0.5 text-xs text-violet-600">
@@ -930,9 +882,7 @@ export default function MyTasks() {
 
                   <div className="flex items-center gap-2 text-sm text-slate-600">
                     <span className="grid h-7 w-7 place-items-center rounded-full bg-slate-100 text-[10px] font-bold">
-                      {employeeName
-                        ?.charAt(0)
-                        ?.toUpperCase()}
+                      {employeeName?.charAt(0)?.toUpperCase()}
                     </span>
 
                     {employeeName}
@@ -942,8 +892,7 @@ export default function MyTasks() {
 
                   <span
                     className={`w-fit rounded-full px-2.5 py-1 text-xs font-medium ${
-                      style[task.status] ||
-                      style["To Do"]
+                      style[task.status] || style["To Do"]
                     }`}
                   >
                     {task.status}
@@ -954,16 +903,11 @@ export default function MyTasks() {
                   <span className="flex items-center gap-1 text-sm text-slate-500">
                     <CalendarClock size={15} />
                     {task.dueDate
-                      ? new Date(
-                          task.dueDate
-                        ).toLocaleDateString(
-                          "en-IN",
-                          {
-                            day: "2-digit",
-                            month: "short",
-                            year: "numeric",
-                          }
-                        )
+                      ? new Date(task.dueDate).toLocaleDateString("en-IN", {
+                          day: "2-digit",
+                          month: "short",
+                          year: "numeric",
+                        })
                       : "-"}
                   </span>
                 </div>
@@ -976,8 +920,12 @@ export default function MyTasks() {
           <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white shadow-2xl">
             <div className="flex items-center justify-between border-b border-slate-100 px-6 py-4">
               <div>
-                <h2 className="text-lg font-bold text-slate-900">Create new task</h2>
-                <p className="mt-1 text-sm text-slate-500">Add a task to a project.</p>
+                <h2 className="text-lg font-bold text-slate-900">
+                  Create new task
+                </h2>
+                <p className="mt-1 text-sm text-slate-500">
+                  Add a task to a project.
+                </p>
               </div>
               <button
                 type="button"
@@ -992,7 +940,9 @@ export default function MyTasks() {
               <input
                 required
                 value={taskForm.title}
-                onChange={(e) => setTaskForm({ ...taskForm, title: e.target.value })}
+                onChange={(e) =>
+                  setTaskForm({ ...taskForm, title: e.target.value })
+                }
                 placeholder="Task title"
                 className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm"
               />
@@ -1001,7 +951,9 @@ export default function MyTasks() {
                 required
                 rows="3"
                 value={taskForm.description}
-                onChange={(e) => setTaskForm({ ...taskForm, description: e.target.value })}
+                onChange={(e) =>
+                  setTaskForm({ ...taskForm, description: e.target.value })
+                }
                 placeholder="Task description"
                 className="w-full rounded-xl border border-slate-200 px-3 py-2.5 text-sm"
               />
@@ -1010,7 +962,9 @@ export default function MyTasks() {
                 <select
                   required
                   value={taskForm.projectId}
-                  onChange={(e) => setTaskForm({ ...taskForm, projectId: e.target.value })}
+                  onChange={(e) =>
+                    setTaskForm({ ...taskForm, projectId: e.target.value })
+                  }
                   className="rounded-xl border border-slate-200 px-3 py-2.5 text-sm"
                 >
                   <option value="">Select project</option>
@@ -1036,7 +990,9 @@ export default function MyTasks() {
 
                 <select
                   value={taskForm.priority}
-                  onChange={(e) => setTaskForm({ ...taskForm, priority: e.target.value })}
+                  onChange={(e) =>
+                    setTaskForm({ ...taskForm, priority: e.target.value })
+                  }
                   className="rounded-xl border border-slate-200 px-3 py-2.5 text-sm"
                 >
                   <option value="Low">Low</option>
@@ -1046,7 +1002,9 @@ export default function MyTasks() {
 
                 <select
                   value={taskForm.status}
-                  onChange={(e) => setTaskForm({ ...taskForm, status: e.target.value })}
+                  onChange={(e) =>
+                    setTaskForm({ ...taskForm, status: e.target.value })
+                  }
                   className="rounded-xl border border-slate-200 px-3 py-2.5 text-sm"
                 >
                   <option value="Not Started">Not Started</option>
@@ -1058,7 +1016,9 @@ export default function MyTasks() {
                   required
                   type="date"
                   value={taskForm.startDate}
-                  onChange={(e) => setTaskForm({ ...taskForm, startDate: e.target.value })}
+                  onChange={(e) =>
+                    setTaskForm({ ...taskForm, startDate: e.target.value })
+                  }
                   className="rounded-xl border border-slate-200 px-3 py-2.5 text-sm"
                 />
 
@@ -1066,7 +1026,9 @@ export default function MyTasks() {
                   required
                   type="date"
                   value={taskForm.dueDate}
-                  onChange={(e) => setTaskForm({ ...taskForm, dueDate: e.target.value })}
+                  onChange={(e) =>
+                    setTaskForm({ ...taskForm, dueDate: e.target.value })
+                  }
                   className="rounded-xl border border-slate-200 px-3 py-2.5 text-sm"
                 />
               </div>
@@ -1091,7 +1053,6 @@ export default function MyTasks() {
           </div>
         </div>
       )}
-
     </div>
   );
 }

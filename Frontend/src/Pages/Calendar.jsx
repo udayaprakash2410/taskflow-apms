@@ -3,28 +3,15 @@ import { ChevronLeft, ChevronRight, Plus } from "lucide-react";
 
 import { useWorkspace } from "../Context/WorkspaceContext";
 
-const weekdayNames = [
-  "Sun",
-  "Mon",
-  "Tue",
-  "Wed",
-  "Thu",
-  "Fri",
-  "Sat",
-];
+const weekdayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export default function Calendar() {
   const { role, token } = useWorkspace();
-  const [currentMonth, setCurrentMonth] = useState(
-    () => new Date()
-  );
+  const [currentMonth, setCurrentMonth] = useState(() => new Date());
   const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
-    if (
-      !token ||
-      (role !== "employee" && role !== "manager")
-    ) {
+    if (!token || (role !== "employee" && role !== "manager")) {
       return;
     }
 
@@ -34,13 +21,13 @@ export default function Calendar() {
       try {
         const response = await fetch(
           role === "employee"
-            ? "http://localhost:5000/api/tasks/my"
-            : "http://localhost:5000/api/tasks",
+            ? "http://https://taskflow-apms.onrender.com/api/tasks/my"
+            : "http://https://taskflow-apms.onrender.com/api/tasks",
           {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          }
+          },
         );
 
         const data = await response.json();
@@ -76,10 +63,7 @@ export default function Calendar() {
 
     return [
       ...Array(firstWeekday).fill(null),
-      ...Array.from(
-        { length: numberOfDays },
-        (_, index) => index + 1
-      ),
+      ...Array.from({ length: numberOfDays }, (_, index) => index + 1),
     ];
   }, [currentMonth]);
 
@@ -94,18 +78,12 @@ export default function Calendar() {
 
       const dueDate = new Date(task.dueDate);
 
-      if (
-        dueDate.getFullYear() !== year ||
-        dueDate.getMonth() !== month
-      ) {
+      if (dueDate.getFullYear() !== year || dueDate.getMonth() !== month) {
         return groupedTasks;
       }
 
       const day = dueDate.getDate();
-      groupedTasks[day] = [
-        ...(groupedTasks[day] || []),
-        task,
-      ];
+      groupedTasks[day] = [...(groupedTasks[day] || []), task];
 
       return groupedTasks;
     }, {});
@@ -128,8 +106,7 @@ export default function Calendar() {
 
   const changeMonth = (offset) => {
     setCurrentMonth(
-      (month) =>
-        new Date(month.getFullYear(), month.getMonth() + offset, 1)
+      (month) => new Date(month.getFullYear(), month.getMonth() + offset, 1),
     );
   };
 

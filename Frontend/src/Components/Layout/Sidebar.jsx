@@ -54,30 +54,24 @@ export default function Sidebar() {
       if (!token) return;
 
       const response = await fetch(
-        "http://localhost:5000/api/notifications/unread-count",
+        "http://https://taskflow-apms.onrender.com/api/notifications/unread-count",
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       const data = await response.json();
 
       if (!response.ok) {
-        console.error(
-          "Unread notification error:",
-          data.message
-        );
+        console.error("Unread notification error:", data.message);
         return;
       }
 
       setUnreadCount(data.count || 0);
     } catch (error) {
-      console.error(
-        "Cannot fetch unread notification count:",
-        error
-      );
+      console.error("Cannot fetch unread notification count:", error);
     }
   };
 
@@ -95,30 +89,24 @@ export default function Sidebar() {
       }
 
       const response = await fetch(
-        "http://localhost:5000/api/activities/unread-count",
+        "http://https://taskflow-apms.onrender.com/api/activities/unread-count",
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       const data = await response.json();
 
       if (!response.ok) {
-        console.error(
-          "Unread activity error:",
-          data.message
-        );
+        console.error("Unread activity error:", data.message);
         return;
       }
 
       setUnreadActivityCount(data.count || 0);
     } catch (error) {
-      console.error(
-        "Cannot fetch unread activity count:",
-        error
-      );
+      console.error("Cannot fetch unread activity count:", error);
     }
   };
 
@@ -131,30 +119,24 @@ export default function Sidebar() {
       if (!token) return;
 
       const response = await fetch(
-        "http://localhost:5000/api/announcements/unread/count",
+        "http://https://taskflow-apms.onrender.com/api/announcements/unread/count",
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       const data = await response.json();
 
       if (!response.ok) {
-        console.error(
-          "Unread announcement error:",
-          data.message
-        );
+        console.error("Unread announcement error:", data.message);
         return;
       }
 
       setUnreadAnnouncementCount(data.count || 0);
     } catch (error) {
-      console.error(
-        "Cannot fetch unread announcement count:",
-        error
-      );
+      console.error("Cannot fetch unread announcement count:", error);
     }
   };
 
@@ -179,15 +161,12 @@ export default function Sidebar() {
       fetchUnreadCount();
     };
 
-    window.addEventListener(
-      "notificationUpdated",
-      handleNotificationUpdate
-    );
+    window.addEventListener("notificationUpdated", handleNotificationUpdate);
 
     return () => {
       window.removeEventListener(
         "notificationUpdated",
-        handleNotificationUpdate
+        handleNotificationUpdate,
       );
     };
   }, [token]);
@@ -201,16 +180,10 @@ export default function Sidebar() {
       fetchUnreadActivityCount();
     };
 
-    window.addEventListener(
-      "activityUpdated",
-      handleActivityUpdate
-    );
+    window.addEventListener("activityUpdated", handleActivityUpdate);
 
     return () => {
-      window.removeEventListener(
-        "activityUpdated",
-        handleActivityUpdate
-      );
+      window.removeEventListener("activityUpdated", handleActivityUpdate);
     };
   }, [token, role]);
 
@@ -223,15 +196,12 @@ export default function Sidebar() {
       fetchUnreadAnnouncementCount();
     };
 
-    window.addEventListener(
-      "announcementUpdated",
-      handleAnnouncementUpdate
-    );
+    window.addEventListener("announcementUpdated", handleAnnouncementUpdate);
 
     return () => {
       window.removeEventListener(
         "announcementUpdated",
-        handleAnnouncementUpdate
+        handleAnnouncementUpdate,
       );
     };
   }, [token, role]);
@@ -281,7 +251,6 @@ export default function Sidebar() {
   // ------------------------------------------------------
   // HR
   // ------------------------------------------------------
-
   else if (role === "hr") {
     links = [
       {
@@ -326,7 +295,6 @@ export default function Sidebar() {
   // ------------------------------------------------------
   // MANAGER
   // ------------------------------------------------------
-
   else if (role === "manager") {
     links = [
       ...projectLinks,
@@ -390,13 +358,9 @@ export default function Sidebar() {
         </div>
 
         <div>
-          <h1 className="text-lg font-bold text-slate-900">
-            TaskFlow
-          </h1>
+          <h1 className="text-lg font-bold text-slate-900">TaskFlow</h1>
 
-          <p className="text-xs text-slate-500">
-            Project management
-          </p>
+          <p className="text-xs text-slate-500">Project management</p>
         </div>
       </div>
 
@@ -411,72 +375,62 @@ export default function Sidebar() {
             {role === "manager"
               ? "Manager panel"
               : role === "hr"
-              ? "HR panel"
-              : "Employee panel"}
+                ? "HR panel"
+                : "Employee panel"}
           </p>
         </div>
       </div>
 
       {/* NAVIGATION */}
       <nav className="space-y-1">
-        {links.map(
-          ({
-            name,
-            path,
-            icon: Icon,
-            badge,
-          }) => (
-            <NavLink
-              key={path}
-              to={link(path)}
-              end={path === ""}
-              onClick={() => {
-                if (name === "Activity") {
-                  setUnreadActivityCount(0);
-                }
-
-              }}
-              className={({ isActive }) =>
-                `group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition ${
-                  isActive
-                    ? "bg-slate-900 text-white shadow-sm"
-                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-                }`
+        {links.map(({ name, path, icon: Icon, badge }) => (
+          <NavLink
+            key={path}
+            to={link(path)}
+            end={path === ""}
+            onClick={() => {
+              if (name === "Activity") {
+                setUnreadActivityCount(0);
               }
-            >
-              {({ isActive }) => (
-                <>
-                  <Icon
-                    size={19}
-                    className={
-                      isActive
-                        ? "text-white"
-                        : "text-slate-500 group-hover:text-slate-900"
-                    }
-                  />
+            }}
+            className={({ isActive }) =>
+              `group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition ${
+                isActive
+                  ? "bg-slate-900 text-white shadow-sm"
+                  : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+              }`
+            }
+          >
+            {({ isActive }) => (
+              <>
+                <Icon
+                  size={19}
+                  className={
+                    isActive
+                      ? "text-white"
+                      : "text-slate-500 group-hover:text-slate-900"
+                  }
+                />
 
-                  <span>{name}</span>
+                <span>{name}</span>
 
-                  {/* ACTIVITY BADGE */}
-                  {name === "Activity" &&
-                    badge > 0 && (
-                      <span className="ml-auto rounded-full bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-600">
-                        {badge > 99 ? "99+" : badge}
-                      </span>
-                    )}
+                {/* ACTIVITY BADGE */}
+                {name === "Activity" && badge > 0 && (
+                  <span className="ml-auto rounded-full bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-600">
+                    {badge > 99 ? "99+" : badge}
+                  </span>
+                )}
 
-                  {/* ANNOUNCEMENT BADGE */}
-                  {name === "Announcements" &&
-                    badge > 0 && (
-                      <span className="ml-auto rounded-full bg-violet-100 px-2 py-0.5 text-xs font-semibold text-violet-600">
-                        {badge > 99 ? "99+" : badge}
-                      </span>
-                    )}
-                </>
-              )}
-            </NavLink>
-          )
-        )}
+                {/* ANNOUNCEMENT BADGE */}
+                {name === "Announcements" && badge > 0 && (
+                  <span className="ml-auto rounded-full bg-violet-100 px-2 py-0.5 text-xs font-semibold text-violet-600">
+                    {badge > 99 ? "99+" : badge}
+                  </span>
+                )}
+              </>
+            )}
+          </NavLink>
+        ))}
       </nav>
 
       {/* NOTIFICATIONS */}
@@ -506,9 +460,7 @@ export default function Sidebar() {
 
               {unreadCount > 0 && (
                 <span className="ml-auto rounded-full bg-violet-100 px-2 py-0.5 text-xs font-semibold text-violet-600">
-                  {unreadCount > 99
-                    ? "99+"
-                    : unreadCount}
+                  {unreadCount > 99 ? "99+" : unreadCount}
                 </span>
               )}
             </>

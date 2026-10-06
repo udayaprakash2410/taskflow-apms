@@ -14,11 +14,7 @@ import { useWorkspace } from "../Context/WorkspaceContext";
 import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
-  const {
-    role,
-    currentUser,
-    token,
-  } = useWorkspace();
+  const { role, currentUser, token } = useWorkspace();
 
   const navigate = useNavigate();
 
@@ -30,17 +26,13 @@ export default function Dashboard() {
 
   const [tasks, setTasks] = useState([]);
 
-  const [employees, setEmployees] =
-    useState([]);
+  const [employees, setEmployees] = useState([]);
 
-  const [recentActivities, setRecentActivities] =
-    useState([]);
+  const [recentActivities, setRecentActivities] = useState([]);
 
-  const [loading, setLoading] =
-    useState(true);
+  const [loading, setLoading] = useState(true);
 
-  const [error, setError] =
-    useState("");
+  const [error, setError] = useState("");
 
   // ======================================================
   // FETCH DASHBOARD DATA
@@ -52,206 +44,146 @@ export default function Dashboard() {
       return;
     }
 
-    const fetchDashboardData =
-      async () => {
-        try {
-          setLoading(true);
-          setError("");
+    const fetchDashboardData = async () => {
+      try {
+        setLoading(true);
+        setError("");
 
-          const headers = {
-            Authorization: `Bearer ${token}`,
-          };
+        const headers = {
+          Authorization: `Bearer ${token}`,
+        };
 
-          // ==================================================
-          // PROJECTS
-          // ==================================================
+        // ==================================================
+        // PROJECTS
+        // ==================================================
 
-          let projectsData = [];
+        let projectsData = [];
 
-          if (role === "employee") {
-            // Employee → only assigned projects
-            const response =
-              await fetch(
-                "http://localhost:5000/api/projects/my",
-                {
-                  headers,
-                }
-              );
-
-            const data =
-              await response.json();
-
-            if (!response.ok) {
-              throw new Error(
-                data.message ||
-                  "Failed to load projects."
-              );
-            }
-
-            projectsData = Array.isArray(data)
-              ? data
-              : [];
-          } else if (
-            role === "manager" ||
-            role === "hr"
-          ) {
-            // Manager + HR → all company projects
-            const response =
-              await fetch(
-                "http://localhost:5000/api/projects",
-                {
-                  headers,
-                }
-              );
-
-            const data =
-              await response.json();
-
-            if (!response.ok) {
-              throw new Error(
-                data.message ||
-                  "Failed to load projects."
-              );
-            }
-
-            projectsData = Array.isArray(data)
-              ? data
-              : [];
-          }
-
-          setProjects(
-            projectsData
+        if (role === "employee") {
+          // Employee → only assigned projects
+          const response = await fetch(
+            "http://https://taskflow-apms.onrender.com/api/projects/my",
+            {
+              headers,
+            },
           );
 
-          // ==================================================
-          // TASKS
-          // ==================================================
+          const data = await response.json();
 
-          let tasksData = [];
-
-          if (role === "employee") {
-            // Employee → only assigned tasks
-            const response =
-              await fetch(
-                "http://localhost:5000/api/tasks/my",
-                {
-                  headers,
-                }
-              );
-
-            const data =
-              await response.json();
-
-            if (!response.ok) {
-              throw new Error(
-                data.message ||
-                  "Failed to load tasks."
-              );
-            }
-
-            tasksData = Array.isArray(data)
-              ? data
-              : [];
-          } else if (
-            role === "manager" ||
-            role === "hr"
-          ) {
-            // Manager + HR → all company tasks
-            const response =
-              await fetch(
-                "http://localhost:5000/api/tasks",
-                {
-                  headers,
-                }
-              );
-
-            const data =
-              await response.json();
-
-            if (!response.ok) {
-              throw new Error(
-                data.message ||
-                  "Failed to load tasks."
-              );
-            }
-
-            tasksData = Array.isArray(data)
-              ? data
-              : [];
+          if (!response.ok) {
+            throw new Error(data.message || "Failed to load projects.");
           }
 
-          setTasks(tasksData);
+          projectsData = Array.isArray(data) ? data : [];
+        } else if (role === "manager" || role === "hr") {
+          // Manager + HR → all company projects
+          const response = await fetch(
+            "http://https://taskflow-apms.onrender.com/api/projects",
+            {
+              headers,
+            },
+          );
 
-          // ==================================================
-          // EMPLOYEES
-          // ==================================================
+          const data = await response.json();
 
-          if (
-            role === "manager" ||
-            role === "hr"
-          ) {
-            const response =
-              await fetch(
-                "http://localhost:5000/api/users/employees",
-                {
-                  headers,
-                }
-              );
-
-            const data =
-              await response.json();
-
-            if (!response.ok) {
-              throw new Error(
-                data.message ||
-                  "Failed to load employees."
-              );
-            }
-
-            setEmployees(data);
+          if (!response.ok) {
+            throw new Error(data.message || "Failed to load projects.");
           }
 
-          // ==================================================
-          // REAL DASHBOARD ACTIVITIES
-          // ==================================================
-
-          const activityResponse =
-            await fetch(
-              "http://localhost:5000/api/activities/dashboard",
-              {
-                headers,
-              }
-            );
-
-          const activityData =
-            await activityResponse.json();
-
-          if (!activityResponse.ok) {
-            throw new Error(
-              activityData.message ||
-                "Failed to load activities."
-            );
-          }
-
-          setRecentActivities(
-            Array.isArray(activityData)
-              ? activityData
-              : []
-          );
-        } catch (error) {
-          console.error(
-            "Dashboard data error:",
-            error
-          );
-
-          setError(
-            error.message ||
-              "Failed to load dashboard data."
-          );
-        } finally {
-          setLoading(false);
+          projectsData = Array.isArray(data) ? data : [];
         }
-      };
+
+        setProjects(projectsData);
+
+        // ==================================================
+        // TASKS
+        // ==================================================
+
+        let tasksData = [];
+
+        if (role === "employee") {
+          // Employee → only assigned tasks
+          const response = await fetch(
+            "http://https://taskflow-apms.onrender.com/api/tasks/my",
+            {
+              headers,
+            },
+          );
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(data.message || "Failed to load tasks.");
+          }
+
+          tasksData = Array.isArray(data) ? data : [];
+        } else if (role === "manager" || role === "hr") {
+          // Manager + HR → all company tasks
+          const response = await fetch(
+            "http://https://taskflow-apms.onrender.com/api/tasks",
+            {
+              headers,
+            },
+          );
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(data.message || "Failed to load tasks.");
+          }
+
+          tasksData = Array.isArray(data) ? data : [];
+        }
+
+        setTasks(tasksData);
+
+        // ==================================================
+        // EMPLOYEES
+        // ==================================================
+
+        if (role === "manager" || role === "hr") {
+          const response = await fetch(
+            "http://https://taskflow-apms.onrender.com/api/users/employees",
+            {
+              headers,
+            },
+          );
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(data.message || "Failed to load employees.");
+          }
+
+          setEmployees(data);
+        }
+
+        // ==================================================
+        // REAL DASHBOARD ACTIVITIES
+        // ==================================================
+
+        const activityResponse = await fetch(
+          "http://https://taskflow-apms.onrender.com/api/activities/dashboard",
+          {
+            headers,
+          },
+        );
+
+        const activityData = await activityResponse.json();
+
+        if (!activityResponse.ok) {
+          throw new Error(activityData.message || "Failed to load activities.");
+        }
+
+        setRecentActivities(Array.isArray(activityData) ? activityData : []);
+      } catch (error) {
+        console.error("Dashboard data error:", error);
+
+        setError(error.message || "Failed to load dashboard data.");
+      } finally {
+        setLoading(false);
+      }
+    };
 
     fetchDashboardData();
   }, [role, token]);
@@ -277,62 +209,45 @@ export default function Dashboard() {
   // STATISTICS
   // ======================================================
 
-  const activeProjects =
-    projects.filter(
-      (project) =>
-        project.status ===
-          "Planning" ||
-        project.status ===
-          "In Progress"
-    ).length;
+  const activeProjects = projects.filter(
+    (project) =>
+      project.status === "Planning" || project.status === "In Progress",
+  ).length;
 
-  const completedTasks =
-    tasks.filter(
-      (task) =>
-        task.status ===
-        "Completed"
-    ).length;
+  const completedTasks = tasks.filter(
+    (task) => task.status === "Completed",
+  ).length;
 
-  const inProgressTasks =
-    tasks.filter(
-      (task) =>
-        task.status ===
-        "In Progress"
-    ).length;
+  const inProgressTasks = tasks.filter(
+    (task) => task.status === "In Progress",
+  ).length;
 
-  const teamMembers =
-    role === "employee"
-      ? 1
-      : employees.length;
+  const teamMembers = role === "employee" ? 1 : employees.length;
 
   const stats = [
     {
       label: "Active projects",
       value: activeProjects,
       icon: FolderKanban,
-      color:
-        "text-violet-600 bg-violet-50",
+      color: "text-violet-600 bg-violet-50",
     },
     {
       label: "Tasks completed",
       value: completedTasks,
       icon: CheckCircle2,
-      color:
-        "text-emerald-600 bg-emerald-50",
+      color: "text-emerald-600 bg-emerald-50",
     },
     {
       label: "Tasks in progress",
       value: inProgressTasks,
       icon: Clock3,
-      color:
-        "text-amber-600 bg-amber-50",
+      color: "text-amber-600 bg-amber-50",
     },
     {
       label: "Team members",
       value: teamMembers,
       icon: Users,
-      color:
-        "text-sky-600 bg-sky-50",
+      color: "text-sky-600 bg-sky-50",
     },
   ];
 
@@ -342,22 +257,16 @@ export default function Dashboard() {
 
   const handleMainAction = () => {
     if (role === "hr") {
-      navigate(
-        "/hr/people?add=employee"
-      );
+      navigate("/hr/people?add=employee");
       return;
     }
 
     if (role === "employee") {
-      navigate(
-        "/employee/tasks"
-      );
+      navigate("/employee/tasks");
       return;
     }
 
-    navigate(
-      "/manager/projects"
-    );
+    navigate("/manager/projects");
   };
 
   // ======================================================
@@ -366,62 +275,37 @@ export default function Dashboard() {
 
   const handleViewAll = () => {
     if (role === "employee") {
-      navigate(
-        "/employee/projects"
-      );
+      navigate("/employee/projects");
       return;
     }
 
-    navigate(
-      `/${role}/projects`
-    );
+    navigate(`/${role}/projects`);
   };
 
   // ======================================================
   // PROJECT PROGRESS
   // ======================================================
 
-  const getProjectProgress = (
-    project
-  ) => {
-    const projectTasks =
-      tasks.filter((task) => {
-        const projectId =
-          task.project?._id ||
-          task.project;
+  const getProjectProgress = (project) => {
+    const projectTasks = tasks.filter((task) => {
+      const projectId = task.project?._id || task.project;
 
-        return (
-          projectId?.toString() ===
-          project._id?.toString()
-        );
-      });
+      return projectId?.toString() === project._id?.toString();
+    });
 
     if (projectTasks.length > 0) {
-      const completed =
-        projectTasks.filter(
-          (task) =>
-            task.status ===
-            "Completed"
-        ).length;
+      const completed = projectTasks.filter(
+        (task) => task.status === "Completed",
+      ).length;
 
-      return Math.round(
-        (completed /
-          projectTasks.length) *
-          100
-      );
+      return Math.round((completed / projectTasks.length) * 100);
     }
 
-    if (
-      project.status ===
-      "Completed"
-    ) {
+    if (project.status === "Completed") {
       return 100;
     }
 
-    if (
-      project.status ===
-      "In Progress"
-    ) {
+    if (project.status === "In Progress") {
       return 50;
     }
 
@@ -437,100 +321,65 @@ export default function Dashboard() {
       return "-";
     }
 
-    return new Date(
-      date
-    ).toLocaleDateString(
-      "en-IN",
-      {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-      }
-    );
+    return new Date(date).toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
   };
 
   // ======================================================
   // FORMAT ACTIVITY TIME
   // ======================================================
 
-  const formatActivityTime = (
-    createdAt
-  ) => {
+  const formatActivityTime = (createdAt) => {
     if (!createdAt) {
       return "";
     }
 
-    const activityDate =
-      new Date(createdAt);
+    const activityDate = new Date(createdAt);
 
     const now = new Date();
 
-    const difference =
-      now.getTime() -
-      activityDate.getTime();
+    const difference = now.getTime() - activityDate.getTime();
 
-    const minutes = Math.floor(
-      difference /
-        (1000 * 60)
-    );
+    const minutes = Math.floor(difference / (1000 * 60));
 
     if (minutes < 1) {
       return "Just now";
     }
 
     if (minutes < 60) {
-      return `${minutes} min${
-        minutes === 1
-          ? ""
-          : "s"
-      } ago`;
+      return `${minutes} min${minutes === 1 ? "" : "s"} ago`;
     }
 
-    const hours = Math.floor(
-      minutes / 60
-    );
+    const hours = Math.floor(minutes / 60);
 
     if (hours < 24) {
-      return `${hours} hour${
-        hours === 1
-          ? ""
-          : "s"
-      } ago`;
+      return `${hours} hour${hours === 1 ? "" : "s"} ago`;
     }
 
-    const days = Math.floor(
-      hours / 24
-    );
+    const days = Math.floor(hours / 24);
 
     if (days < 7) {
-      return `${days} day${
-        days === 1
-          ? ""
-          : "s"
-      } ago`;
+      return `${days} day${days === 1 ? "" : "s"} ago`;
     }
 
-    return formatDate(
-      createdAt
-    );
+    return formatDate(createdAt);
   };
 
   // ======================================================
   // ACTIVITY INITIALS
   // ======================================================
 
-  const getInitials = (
-    name
-  ) => {
+  const getInitials = (name) => {
     if (!name) {
       return "U";
     }
 
     return name
       .split(" ")
-      .map(
-        (part) => part[0]
-      )
+      .map((part) => part[0])
       .join("")
       .slice(0, 2)
       .toUpperCase();
@@ -543,7 +392,6 @@ export default function Dashboard() {
   if (loading) {
     return (
       <div className="space-y-7">
-
         <section>
           <div className="h-4 w-40 animate-pulse rounded bg-slate-200" />
 
@@ -553,16 +401,13 @@ export default function Dashboard() {
         </section>
 
         <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          {[1, 2, 3, 4].map(
-            (item) => (
-              <div
-                key={item}
-                className="h-32 animate-pulse rounded-2xl bg-slate-100"
-              />
-            )
-          )}
+          {[1, 2, 3, 4].map((item) => (
+            <div
+              key={item}
+              className="h-32 animate-pulse rounded-2xl bg-slate-100"
+            />
+          ))}
         </section>
-
       </div>
     );
   }
@@ -571,38 +416,21 @@ export default function Dashboard() {
   // TODAY
   // ======================================================
 
-  const today =
-    new Date().toLocaleDateString(
-      "en-IN",
-      {
-        weekday: "long",
-        month: "long",
-        day: "numeric",
-        year: "numeric",
-      }
-    );
+  const today = new Date().toLocaleDateString("en-IN", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
 
   // ======================================================
   // UPCOMING TASKS
   // ======================================================
 
-  const upcomingTasks =
-    tasks
-      .filter(
-        (task) =>
-          task.status !==
-          "Completed"
-      )
-      .sort(
-        (a, b) =>
-          new Date(
-            a.dueDate
-          ) -
-          new Date(
-            b.dueDate
-          )
-      )
-      .slice(0, 4);
+  const upcomingTasks = tasks
+    .filter((task) => task.status !== "Completed")
+    .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
+    .slice(0, 4);
 
   // ======================================================
   // RENDER
@@ -610,37 +438,23 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-7">
-
       {/* ==================================================
           HEADER
       ================================================== */}
 
       <section className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
-
         <div>
-
-          <p className="text-sm font-medium text-violet-600">
-            {today}
-          </p>
+          <p className="text-sm font-medium text-violet-600">{today}</p>
 
           <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900">
-            Good morning,{" "}
-            {user?.name
-              ?.split(" ")[0] ||
-              "User"}
-            .
+            Good morning, {user?.name?.split(" ")[0] || "User"}.
           </h1>
 
-          <p className="mt-1 text-sm text-slate-500">
-            {heading}
-          </p>
-
+          <p className="mt-1 text-sm text-slate-500">{heading}</p>
         </div>
 
         <button
-          onClick={
-            handleMainAction
-          }
+          onClick={handleMainAction}
           className="inline-flex items-center justify-center gap-2 rounded-xl bg-violet-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-violet-700"
         >
           <Plus size={18} />
@@ -651,7 +465,6 @@ export default function Dashboard() {
               ? "View my tasks"
               : "New project"}
         </button>
-
       </section>
 
       {/* ==================================================
@@ -669,19 +482,15 @@ export default function Dashboard() {
       ================================================== */}
 
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-
         {stats.map((stat) => {
-          const Icon =
-            stat.icon;
+          const Icon = stat.icon;
 
           return (
             <div
               key={stat.label}
               className="rounded-2xl border border-slate-200 bg-white p-5"
             >
-
               <div className="flex items-start justify-between">
-
                 <div
                   className={`grid h-10 w-10 place-items-center rounded-xl ${stat.color}`}
                 >
@@ -689,31 +498,19 @@ export default function Dashboard() {
                 </div>
 
                 <span className="flex items-center text-xs font-medium text-emerald-600">
-                  <ArrowUpRight
-                    size={14}
-                  />
+                  <ArrowUpRight size={14} />
                   Live
                 </span>
-
               </div>
 
               <p className="mt-5 text-2xl font-bold text-slate-900">
-                {String(
-                  stat.value
-                ).padStart(
-                  2,
-                  "0"
-                )}
+                {String(stat.value).padStart(2, "0")}
               </p>
 
-              <p className="mt-1 text-sm text-slate-500">
-                {stat.label}
-              </p>
-
+              <p className="mt-1 text-sm text-slate-500">{stat.label}</p>
             </div>
           );
         })}
-
       </section>
 
       {/* ==================================================
@@ -721,161 +518,95 @@ export default function Dashboard() {
       ================================================== */}
 
       <section className="grid gap-6 xl:grid-cols-3">
-
         {/* PROJECT PROGRESS */}
 
         <div className="rounded-2xl border border-slate-200 bg-white p-5 xl:col-span-2">
-
           <div className="mb-5 flex items-center justify-between">
-
             <div>
-
               <h2 className="font-bold text-slate-900">
-                {role === "employee"
-                  ? "My projects"
-                  : "Project progress"}
+                {role === "employee" ? "My projects" : "Project progress"}
               </h2>
 
               <p className="text-sm text-slate-500">
                 What needs attention this week
               </p>
-
             </div>
 
             <button
-              onClick={
-                handleViewAll
-              }
+              onClick={handleViewAll}
               className="text-sm font-semibold text-violet-600"
             >
               View all
             </button>
-
           </div>
 
           <div className="space-y-5">
+            {projects.slice(0, 3).map((project) => {
+              const progress = getProjectProgress(project);
 
-            {projects
-              .slice(0, 3)
-              .map(
-                (project) => {
+              return (
+                <div key={project._id}>
+                  <div className="mb-2 flex justify-between gap-3 text-sm">
+                    <span className="font-medium text-slate-700">
+                      {project.name}
+                    </span>
 
-                  const progress =
-                    getProjectProgress(
-                      project
-                    );
+                    <span className="text-slate-500">{progress}%</span>
+                  </div>
 
-                  return (
+                  <div className="h-2 overflow-hidden rounded-full bg-slate-100">
                     <div
-                      key={
-                        project._id
-                      }
-                    >
+                      className="h-full rounded-full bg-violet-600"
+                      style={{
+                        width: `${progress}%`,
+                      }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
 
-                      <div className="mb-2 flex justify-between gap-3 text-sm">
-
-                        <span className="font-medium text-slate-700">
-                          {
-                            project.name
-                          }
-                        </span>
-
-                        <span className="text-slate-500">
-                          {progress}%
-                        </span>
-
-                      </div>
-
-                      <div className="h-2 overflow-hidden rounded-full bg-slate-100">
-
-                        <div
-                          className="h-full rounded-full bg-violet-600"
-                          style={{
-                            width: `${progress}%`,
-                          }}
-                        />
-
-                      </div>
-
-                    </div>
-                  );
-                }
-              )}
-
-            {projects.length ===
-              0 && (
+            {projects.length === 0 && (
               <p className="py-5 text-center text-sm text-slate-400">
                 No projects available.
               </p>
             )}
-
           </div>
-
         </div>
 
         {/* RECENT ACTIVITY */}
 
         <div className="rounded-2xl border border-slate-200 bg-white p-5">
-
-          <h2 className="font-bold text-slate-900">
-            Recent activity
-          </h2>
+          <h2 className="font-bold text-slate-900">Recent activity</h2>
 
           <div className="mt-5 space-y-5">
+            {recentActivities.length > 0 ? (
+              recentActivities.map((activity) => {
+                const name = activity.userName || activity.user?.name || "User";
 
-            {recentActivities.length >
-            0 ? (
-              recentActivities.map(
-                (activity) => {
-
-                  const name =
-                    activity.userName ||
-                    activity.user?.name ||
-                    "User";
-
-                  return (
-                    <div
-                      className="flex gap-3"
-                      key={
-                        activity._id
-                      }
-                    >
-
-                      <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-violet-50 text-xs font-bold text-violet-600">
-                        {getInitials(
-                          name
-                        )}
-                      </div>
-
-                      <div>
-
-                        <p className="text-sm leading-5 text-slate-700">
-                          {activity.description ||
-                            activity.action}
-                        </p>
-
-                        <p className="mt-1 text-xs text-slate-400">
-                          {formatActivityTime(
-                            activity.createdAt
-                          )}
-                        </p>
-
-                      </div>
-
+                return (
+                  <div className="flex gap-3" key={activity._id}>
+                    <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-violet-50 text-xs font-bold text-violet-600">
+                      {getInitials(name)}
                     </div>
-                  );
-                }
-              )
+
+                    <div>
+                      <p className="text-sm leading-5 text-slate-700">
+                        {activity.description || activity.action}
+                      </p>
+
+                      <p className="mt-1 text-xs text-slate-400">
+                        {formatActivityTime(activity.createdAt)}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })
             ) : (
-              <p className="py-4 text-sm text-slate-400">
-                No recent activity.
-              </p>
+              <p className="py-4 text-sm text-slate-400">No recent activity.</p>
             )}
-
           </div>
-
         </div>
-
       </section>
 
       {/* ==================================================
@@ -883,66 +614,45 @@ export default function Dashboard() {
       ================================================== */}
 
       <section className="rounded-2xl border border-slate-200 bg-white">
-
         <div className="flex items-center justify-between border-b border-slate-100 p-5">
-
           <div>
+            <h2 className="font-bold text-slate-900">Upcoming tasks</h2>
 
-            <h2 className="font-bold text-slate-900">
-              Upcoming tasks
-            </h2>
-
-            <p className="text-sm text-slate-500">
-              Keep work moving forward
-            </p>
-
+            <p className="text-sm text-slate-500">Keep work moving forward</p>
           </div>
 
           <MoreHorizontal className="text-slate-400" />
-
         </div>
 
         <div className="divide-y divide-slate-100">
+          {upcomingTasks.map((task) => (
+            <div
+              key={task._id}
+              className="flex flex-wrap items-center gap-3 p-4"
+            >
+              <span className="h-2 w-2 rounded-full bg-violet-500" />
 
-          {upcomingTasks.map(
-            (task) => (
-              <div
-                key={task._id}
-                className="flex flex-wrap items-center gap-3 p-4"
-              >
+              <p className="min-w-48 flex-1 text-sm font-medium text-slate-700">
+                {task.title}
+              </p>
 
-                <span className="h-2 w-2 rounded-full bg-violet-500" />
+              <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs text-slate-600">
+                {task.status}
+              </span>
 
-                <p className="min-w-48 flex-1 text-sm font-medium text-slate-700">
-                  {task.title}
-                </p>
+              <span className="text-xs text-slate-400">
+                Due {formatDate(task.dueDate)}
+              </span>
+            </div>
+          ))}
 
-                <span className="rounded-full bg-slate-100 px-2.5 py-1 text-xs text-slate-600">
-                  {task.status}
-                </span>
-
-                <span className="text-xs text-slate-400">
-                  Due{" "}
-                  {formatDate(
-                    task.dueDate
-                  )}
-                </span>
-
-              </div>
-            )
-          )}
-
-          {upcomingTasks.length ===
-            0 && (
+          {upcomingTasks.length === 0 && (
             <div className="p-6 text-center text-sm text-slate-400">
               No upcoming tasks.
             </div>
           )}
-
         </div>
-
       </section>
-
     </div>
   );
 }

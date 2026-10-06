@@ -38,12 +38,12 @@ export default function Leave() {
       setError("");
 
       const response = await fetch(
-        "http://localhost:5000/api/leaves/my",
+        "http://https://taskflow-apms.onrender.com/api/leaves/my",
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       const data = await response.json();
@@ -72,12 +72,12 @@ export default function Leave() {
       setError("");
 
       const response = await fetch(
-        "http://localhost:5000/api/leaves",
+        "http://https://taskflow-apms.onrender.com/api/leaves",
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       const data = await response.json();
@@ -136,7 +136,7 @@ export default function Leave() {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/api/leaves",
+        "http://https://taskflow-apms.onrender.com/api/leaves",
         {
           method: "POST",
           headers: {
@@ -144,7 +144,7 @@ export default function Leave() {
             Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(form),
-        }
+        },
       );
 
       const data = await response.json();
@@ -183,13 +183,13 @@ export default function Leave() {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/leaves/${leaveId}/approve`,
+        `http://https://taskflow-apms.onrender.com/api/leaves/${leaveId}/approve`,
         {
           method: "PUT",
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       const data = await response.json();
@@ -221,13 +221,13 @@ export default function Leave() {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/leaves/${leaveId}/reject`,
+        `http://https://taskflow-apms.onrender.com/api/leaves/${leaveId}/reject`,
         {
           method: "PUT",
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       const data = await response.json();
@@ -271,9 +271,7 @@ export default function Leave() {
   if (pageLoading) {
     return (
       <div className="flex min-h-[300px] items-center justify-center">
-        <p className="text-sm text-gray-500">
-          Loading leave requests...
-        </p>
+        <p className="text-sm text-gray-500">Loading leave requests...</p>
       </div>
     );
   }
@@ -312,10 +310,7 @@ export default function Leave() {
             </div>
           )}
 
-          <form
-            onSubmit={handleSubmit}
-            className="grid gap-5 md:grid-cols-2"
-          >
+          <form onSubmit={handleSubmit} className="grid gap-5 md:grid-cols-2">
             <div>
               <label className="mb-2 block text-sm font-medium text-gray-700">
                 Leave Type
@@ -327,21 +322,13 @@ export default function Leave() {
                 onChange={handleChange}
                 className="w-full rounded-lg border border-gray-300 px-3 py-2.5 outline-none focus:border-blue-500"
               >
-                <option value="Casual Leave">
-                  Casual Leave
-                </option>
+                <option value="Casual Leave">Casual Leave</option>
 
-                <option value="Sick Leave">
-                  Sick Leave
-                </option>
+                <option value="Sick Leave">Sick Leave</option>
 
-                <option value="Emergency Leave">
-                  Emergency Leave
-                </option>
+                <option value="Emergency Leave">Emergency Leave</option>
 
-                <option value="Earned Leave">
-                  Earned Leave
-                </option>
+                <option value="Earned Leave">Earned Leave</option>
               </select>
             </div>
 
@@ -409,66 +396,43 @@ export default function Leave() {
           </h2>
 
           {leaves.length === 0 ? (
-            <p className="text-sm text-gray-500">
-              No leave requests found.
-            </p>
+            <p className="text-sm text-gray-500">No leave requests found.</p>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full min-w-[700px] text-left">
                 <thead>
                   <tr className="border-b text-sm text-gray-500">
-                    <th className="px-3 py-3">
-                      Leave Type
-                    </th>
+                    <th className="px-3 py-3">Leave Type</th>
 
-                    <th className="px-3 py-3">
-                      Start Date
-                    </th>
+                    <th className="px-3 py-3">Start Date</th>
 
-                    <th className="px-3 py-3">
-                      End Date
-                    </th>
+                    <th className="px-3 py-3">End Date</th>
 
-                    <th className="px-3 py-3">
-                      Reason
-                    </th>
+                    <th className="px-3 py-3">Reason</th>
 
-                    <th className="px-3 py-3">
-                      Status
-                    </th>
+                    <th className="px-3 py-3">Status</th>
                   </tr>
                 </thead>
 
                 <tbody>
                   {leaves.map((leave) => (
-                    <tr
-                      key={leave._id}
-                      className="border-b last:border-b-0"
-                    >
+                    <tr key={leave._id} className="border-b last:border-b-0">
+                      <td className="px-3 py-4">{leave.leaveType}</td>
+
                       <td className="px-3 py-4">
-                        {leave.leaveType}
+                        {new Date(leave.startDate).toLocaleDateString()}
                       </td>
 
                       <td className="px-3 py-4">
-                        {new Date(
-                          leave.startDate
-                        ).toLocaleDateString()}
+                        {new Date(leave.endDate).toLocaleDateString()}
                       </td>
 
-                      <td className="px-3 py-4">
-                        {new Date(
-                          leave.endDate
-                        ).toLocaleDateString()}
-                      </td>
-
-                      <td className="max-w-xs px-3 py-4">
-                        {leave.reason}
-                      </td>
+                      <td className="max-w-xs px-3 py-4">{leave.reason}</td>
 
                       <td className="px-3 py-4">
                         <span
                           className={`rounded-full px-3 py-1 text-xs font-medium ${getStatusClass(
-                            leave.status
+                            leave.status,
                           )}`}
                         >
                           {leave.status}
@@ -527,65 +491,42 @@ export default function Leave() {
             </div>
 
             <div className="rounded-lg bg-violet-50 px-3 py-2 text-sm font-medium text-violet-700">
-              {leaves.length}{" "}
-              {leaves.length === 1
-                ? "Request"
-                : "Requests"}
+              {leaves.length} {leaves.length === 1 ? "Request" : "Requests"}
             </div>
           </div>
 
           {leaves.length === 0 ? (
             <div className="rounded-lg bg-slate-50 px-4 py-10 text-center">
-              <p className="text-sm text-gray-500">
-                No leave requests found.
-              </p>
+              <p className="text-sm text-gray-500">No leave requests found.</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full min-w-[1050px] text-left">
                 <thead>
                   <tr className="border-b text-sm text-gray-500">
-                    <th className="px-3 py-3">
-                      Employee
-                    </th>
+                    <th className="px-3 py-3">Employee</th>
 
-                    <th className="px-3 py-3">
-                      Leave Type
-                    </th>
+                    <th className="px-3 py-3">Leave Type</th>
 
-                    <th className="px-3 py-3">
-                      Start Date
-                    </th>
+                    <th className="px-3 py-3">Start Date</th>
 
-                    <th className="px-3 py-3">
-                      End Date
-                    </th>
+                    <th className="px-3 py-3">End Date</th>
 
-                    <th className="px-3 py-3">
-                      Reason
-                    </th>
+                    <th className="px-3 py-3">Reason</th>
 
-                    <th className="px-3 py-3">
-                      Status
-                    </th>
+                    <th className="px-3 py-3">Status</th>
 
-                    <th className="px-3 py-3">
-                      Action
-                    </th>
+                    <th className="px-3 py-3">Action</th>
                   </tr>
                 </thead>
 
                 <tbody>
                   {leaves.map((leave) => (
-                    <tr
-                      key={leave._id}
-                      className="border-b last:border-b-0"
-                    >
+                    <tr key={leave._id} className="border-b last:border-b-0">
                       <td className="px-3 py-4">
                         <div>
                           <p className="font-medium text-gray-800">
-                            {leave.employee?.name ||
-                              leave.employeeName}
+                            {leave.employee?.name || leave.employeeName}
                           </p>
 
                           <p className="text-xs text-gray-500">
@@ -599,15 +540,11 @@ export default function Leave() {
                       </td>
 
                       <td className="px-3 py-4 text-sm text-gray-700">
-                        {new Date(
-                          leave.startDate
-                        ).toLocaleDateString()}
+                        {new Date(leave.startDate).toLocaleDateString()}
                       </td>
 
                       <td className="px-3 py-4 text-sm text-gray-700">
-                        {new Date(
-                          leave.endDate
-                        ).toLocaleDateString()}
+                        {new Date(leave.endDate).toLocaleDateString()}
                       </td>
 
                       <td className="max-w-[220px] px-3 py-4 text-sm text-gray-700">
@@ -617,7 +554,7 @@ export default function Leave() {
                       <td className="px-3 py-4">
                         <span
                           className={`rounded-full px-3 py-1 text-xs font-medium ${getStatusClass(
-                            leave.status
+                            leave.status,
                           )}`}
                         >
                           {leave.status}
@@ -628,14 +565,8 @@ export default function Leave() {
                         {leave.status === "Pending" ? (
                           <div className="flex gap-2">
                             <button
-                              onClick={() =>
-                                handleApprove(
-                                  leave._id
-                                )
-                              }
-                              disabled={
-                                actionId === leave._id
-                              }
+                              onClick={() => handleApprove(leave._id)}
+                              disabled={actionId === leave._id}
                               className="rounded-lg bg-green-600 px-3 py-2 text-xs font-medium text-white hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-60"
                             >
                               {actionId === leave._id
@@ -644,14 +575,8 @@ export default function Leave() {
                             </button>
 
                             <button
-                              onClick={() =>
-                                handleReject(
-                                  leave._id
-                                )
-                              }
-                              disabled={
-                                actionId === leave._id
-                              }
+                              onClick={() => handleReject(leave._id)}
+                              disabled={actionId === leave._id}
                               className="rounded-lg bg-red-600 px-3 py-2 text-xs font-medium text-white hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-60"
                             >
                               Reject
@@ -703,55 +628,35 @@ export default function Leave() {
           </h2>
 
           {leaves.length === 0 ? (
-            <p className="text-sm text-gray-500">
-              No leave requests found.
-            </p>
+            <p className="text-sm text-gray-500">No leave requests found.</p>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full min-w-[1000px] text-left">
                 <thead>
                   <tr className="border-b text-sm text-gray-500">
-                    <th className="px-3 py-3">
-                      Employee
-                    </th>
+                    <th className="px-3 py-3">Employee</th>
 
-                    <th className="px-3 py-3">
-                      Leave Type
-                    </th>
+                    <th className="px-3 py-3">Leave Type</th>
 
-                    <th className="px-3 py-3">
-                      Dates
-                    </th>
+                    <th className="px-3 py-3">Dates</th>
 
-                    <th className="px-3 py-3">
-                      Reason
-                    </th>
+                    <th className="px-3 py-3">Reason</th>
 
-                    <th className="px-3 py-3">
-                      Status
-                    </th>
+                    <th className="px-3 py-3">Status</th>
 
-                    <th className="px-3 py-3">
-                      Decided By
-                    </th>
+                    <th className="px-3 py-3">Decided By</th>
 
-                    <th className="px-3 py-3">
-                      Decision Date
-                    </th>
+                    <th className="px-3 py-3">Decision Date</th>
                   </tr>
                 </thead>
 
                 <tbody>
                   {leaves.map((leave) => (
-                    <tr
-                      key={leave._id}
-                      className="border-b last:border-b-0"
-                    >
+                    <tr key={leave._id} className="border-b last:border-b-0">
                       <td className="px-3 py-4">
                         <div>
                           <p className="font-medium text-gray-800">
-                            {leave.employee?.name ||
-                              leave.employeeName}
+                            {leave.employee?.name || leave.employeeName}
                           </p>
 
                           <p className="text-xs text-gray-500">
@@ -760,18 +665,11 @@ export default function Leave() {
                         </div>
                       </td>
 
-                      <td className="px-3 py-4 text-sm">
-                        {leave.leaveType}
-                      </td>
+                      <td className="px-3 py-4 text-sm">{leave.leaveType}</td>
 
                       <td className="px-3 py-4 text-sm">
-                        {new Date(
-                          leave.startDate
-                        ).toLocaleDateString()}{" "}
-                        -{" "}
-                        {new Date(
-                          leave.endDate
-                        ).toLocaleDateString()}
+                        {new Date(leave.startDate).toLocaleDateString()} -{" "}
+                        {new Date(leave.endDate).toLocaleDateString()}
                       </td>
 
                       <td className="max-w-[220px] px-3 py-4 text-sm">
@@ -781,7 +679,7 @@ export default function Leave() {
                       <td className="px-3 py-4">
                         <span
                           className={`rounded-full px-3 py-1 text-xs font-medium ${getStatusClass(
-                            leave.status
+                            leave.status,
                           )}`}
                         >
                           {leave.status}
@@ -794,9 +692,7 @@ export default function Leave() {
 
                       <td className="px-3 py-4 text-sm">
                         {leave.decisionDate
-                          ? new Date(
-                              leave.decisionDate
-                            ).toLocaleDateString()
+                          ? new Date(leave.decisionDate).toLocaleDateString()
                           : "-"}
                       </td>
                     </tr>

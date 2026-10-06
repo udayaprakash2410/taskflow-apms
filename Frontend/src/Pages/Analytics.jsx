@@ -12,7 +12,7 @@ import {
 
 import { useWorkspace } from "../Context/WorkspaceContext";
 
-const API_URL = "http://localhost:5000/api";
+const API_URL = "http://https://taskflow-apms.onrender.com/api";
 
 const statusColors = {
   "To Do": "bg-slate-400",
@@ -44,17 +44,11 @@ function StatCard({ title, value, icon: Icon, description }) {
     <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
       <div className="flex items-start justify-between">
         <div>
-          <p className="text-sm font-medium text-slate-500">
-            {title}
-          </p>
+          <p className="text-sm font-medium text-slate-500">{title}</p>
 
-          <h2 className="mt-2 text-3xl font-bold text-slate-900">
-            {value}
-          </h2>
+          <h2 className="mt-2 text-3xl font-bold text-slate-900">{value}</h2>
 
-          <p className="mt-1 text-xs text-slate-400">
-            {description}
-          </p>
+          <p className="mt-1 text-xs text-slate-400">{description}</p>
         </div>
 
         <div className="grid h-11 w-11 place-items-center rounded-xl bg-violet-50 text-violet-600">
@@ -102,14 +96,10 @@ export default function Analytics() {
       };
 
       const taskEndpoint =
-        role === "employee"
-          ? `${API_URL}/tasks/my`
-          : `${API_URL}/tasks`;
+        role === "employee" ? `${API_URL}/tasks/my` : `${API_URL}/tasks`;
 
       const projectEndpoint =
-        role === "employee"
-          ? `${API_URL}/projects/my`
-          : `${API_URL}/projects`;
+        role === "employee" ? `${API_URL}/projects/my` : `${API_URL}/projects`;
 
       const requests = [
         fetch(taskEndpoint, {
@@ -124,7 +114,7 @@ export default function Analytics() {
         requests.push(
           fetch(`${API_URL}/users/employees`, {
             headers,
-          })
+          }),
         );
       }
 
@@ -134,9 +124,7 @@ export default function Analytics() {
         if (!response.ok) {
           const data = await response.json().catch(() => ({}));
 
-          throw new Error(
-            data.message || "Failed to load analytics data."
-          );
+          throw new Error(data.message || "Failed to load analytics data.");
         }
       }
 
@@ -149,20 +137,14 @@ export default function Analytics() {
       if (role === "manager" || role === "hr") {
         const employeeData = await responses[2].json();
 
-        setEmployees(
-          Array.isArray(employeeData)
-            ? employeeData
-            : []
-        );
+        setEmployees(Array.isArray(employeeData) ? employeeData : []);
       } else {
         setEmployees([]);
       }
     } catch (err) {
       console.error("Analytics error:", err);
 
-      setError(
-        err.message || "Unable to load analytics."
-      );
+      setError(err.message || "Unable to load analytics.");
     } finally {
       setLoading(false);
     }
@@ -180,28 +162,21 @@ export default function Analytics() {
     const total = tasks.length;
 
     const completed = tasks.filter(
-      (task) => task.status === "Completed"
+      (task) => task.status === "Completed",
     ).length;
 
     const inProgress = tasks.filter(
-      (task) => task.status === "In Progress"
+      (task) => task.status === "In Progress",
     ).length;
 
-    const review = tasks.filter(
-      (task) => task.status === "Review"
-    ).length;
+    const review = tasks.filter((task) => task.status === "Review").length;
 
-    const toDo = tasks.filter(
-      (task) => task.status === "To Do"
-    ).length;
+    const toDo = tasks.filter((task) => task.status === "To Do").length;
 
     const today = new Date();
 
     const overdue = tasks.filter((task) => {
-      if (
-        task.status === "Completed" ||
-        !task.dueDate
-      ) {
+      if (task.status === "Completed" || !task.dueDate) {
         return false;
       }
 
@@ -209,9 +184,7 @@ export default function Analytics() {
     }).length;
 
     const completionRate =
-      total > 0
-        ? Math.round((completed / total) * 100)
-        : 0;
+      total > 0 ? Math.round((completed / total) * 100) : 0;
 
     return {
       total,
@@ -261,23 +234,17 @@ export default function Analytics() {
     return [
       {
         name: "Low",
-        value: tasks.filter(
-          (task) => task.priority === "Low"
-        ).length,
+        value: tasks.filter((task) => task.priority === "Low").length,
         color: priorityColors.Low,
       },
       {
         name: "Medium",
-        value: tasks.filter(
-          (task) => task.priority === "Medium"
-        ).length,
+        value: tasks.filter((task) => task.priority === "Medium").length,
         color: priorityColors.Medium,
       },
       {
         name: "High",
-        value: tasks.filter(
-          (task) => task.priority === "High"
-        ).length,
+        value: tasks.filter((task) => task.priority === "High").length,
         color: priorityColors.High,
       },
     ];
@@ -300,24 +267,15 @@ export default function Analytics() {
     }
 
     return employees.map((employee) => {
-      const employeeTasks = tasks.filter(
-        (task) => {
-          const assignedId =
-            task.assignedTo?._id ||
-            task.assignedTo;
+      const employeeTasks = tasks.filter((task) => {
+        const assignedId = task.assignedTo?._id || task.assignedTo;
 
-          return (
-            assignedId &&
-            assignedId.toString() ===
-              employee._id.toString()
-          );
-        }
-      );
+        return assignedId && assignedId.toString() === employee._id.toString();
+      });
 
-      const completedTasks =
-        employeeTasks.filter(
-          (task) => task.status === "Completed"
-        ).length;
+      const completedTasks = employeeTasks.filter(
+        (task) => task.status === "Completed",
+      ).length;
 
       return {
         id: employee._id,
@@ -334,38 +292,25 @@ export default function Analytics() {
 
   const projectProgress = useMemo(() => {
     return projects.map((project) => {
-      const projectId =
-        project._id?.toString();
+      const projectId = project._id?.toString();
 
       const projectTasks = tasks.filter((task) => {
-        const taskProjectId =
-          task.project?._id ||
-          task.project;
+        const taskProjectId = task.project?._id || task.project;
 
-        return (
-          taskProjectId &&
-          taskProjectId.toString() === projectId
-        );
+        return taskProjectId && taskProjectId.toString() === projectId;
       });
 
       let progress = 0;
 
       if (projectTasks.length > 0) {
-        const completedTasks =
-          projectTasks.filter(
-            (task) => task.status === "Completed"
-          ).length;
+        const completedTasks = projectTasks.filter(
+          (task) => task.status === "Completed",
+        ).length;
 
-        progress = Math.round(
-          (completedTasks /
-            projectTasks.length) *
-            100
-        );
+        progress = Math.round((completedTasks / projectTasks.length) * 100);
       } else if (project.status === "Completed") {
         progress = 100;
-      } else if (
-        project.status === "In Progress"
-      ) {
+      } else if (project.status === "In Progress") {
         progress = 50;
       }
 
@@ -385,10 +330,7 @@ export default function Analytics() {
     return (
       <div className="flex min-h-[500px] items-center justify-center">
         <div className="flex items-center gap-3 text-slate-500">
-          <RefreshCw
-            size={20}
-            className="animate-spin"
-          />
+          <RefreshCw size={20} className="animate-spin" />
           Loading analytics...
         </div>
       </div>
@@ -406,9 +348,7 @@ export default function Analytics() {
           Unable to load analytics
         </h2>
 
-        <p className="mt-2 text-sm text-red-600">
-          {error}
-        </p>
+        <p className="mt-2 text-sm text-red-600">{error}</p>
 
         <button
           onClick={loadAnalytics}
@@ -422,7 +362,6 @@ export default function Analytics() {
 
   return (
     <div className="space-y-6">
-
       {/* ==================================================
           HEADER
       ================================================== */}
@@ -430,19 +369,13 @@ export default function Analytics() {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <BarChart3
-              size={24}
-              className="text-violet-600"
-            />
+            <BarChart3 size={24} className="text-violet-600" />
 
-            <h1 className="text-2xl font-bold text-slate-900">
-              Analytics
-            </h1>
+            <h1 className="text-2xl font-bold text-slate-900">Analytics</h1>
           </div>
 
           <p className="mt-1 text-sm text-slate-500">
-            Track task performance, project progress,
-            workload and deadlines.
+            Track task performance, project progress, workload and deadlines.
           </p>
         </div>
 
@@ -460,7 +393,6 @@ export default function Analytics() {
       ================================================== */}
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
-
         <StatCard
           title="Total Tasks"
           value={statistics.total}
@@ -495,7 +427,6 @@ export default function Analytics() {
           icon={AlertTriangle}
           description="Past due date"
         />
-
       </div>
 
       {/* ==================================================
@@ -503,14 +434,10 @@ export default function Analytics() {
       ================================================== */}
 
       <div className="grid gap-6 lg:grid-cols-3">
-
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm lg:col-span-2">
-
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-bold text-slate-900">
-                Task Status
-              </h2>
+              <h2 className="text-lg font-bold text-slate-900">Task Status</h2>
 
               <p className="text-sm text-slate-500">
                 Current distribution of your tasks
@@ -523,28 +450,18 @@ export default function Analytics() {
           </div>
 
           <div className="mt-6">
-            <ProgressBar
-              value={statistics.completionRate}
-            />
+            <ProgressBar value={statistics.completionRate} />
           </div>
 
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-
             {statusData.map((item) => {
               const percentage =
                 statistics.total > 0
-                  ? Math.round(
-                      (item.value /
-                        statistics.total) *
-                        100
-                    )
+                  ? Math.round((item.value / statistics.total) * 100)
                   : 0;
 
               return (
-                <div
-                  key={item.name}
-                  className="rounded-xl bg-slate-50 p-4"
-                >
+                <div key={item.name} className="rounded-xl bg-slate-50 p-4">
                   <div className="flex items-center gap-2">
                     <span
                       className={`h-2.5 w-2.5 rounded-full ${item.color}`}
@@ -567,37 +484,25 @@ export default function Analytics() {
                 </div>
               );
             })}
-
           </div>
         </div>
 
         {/* PRIORITY */}
 
         <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+          <h2 className="text-lg font-bold text-slate-900">Priority</h2>
 
-          <h2 className="text-lg font-bold text-slate-900">
-            Priority
-          </h2>
-
-          <p className="text-sm text-slate-500">
-            Tasks grouped by priority
-          </p>
+          <p className="text-sm text-slate-500">Tasks grouped by priority</p>
 
           <div className="mt-6 space-y-5">
-
             {priorityData.map((item) => {
               const percentage =
                 statistics.total > 0
-                  ? Math.round(
-                      (item.value /
-                        statistics.total) *
-                        100
-                    )
+                  ? Math.round((item.value / statistics.total) * 100)
                   : 0;
 
               return (
                 <div key={item.name}>
-
                   <div className="mb-2 flex justify-between">
                     <div className="flex items-center gap-2">
                       <span
@@ -622,14 +527,11 @@ export default function Analytics() {
                       }}
                     />
                   </div>
-
                 </div>
               );
             })}
-
           </div>
         </div>
-
       </div>
 
       {/* ==================================================
@@ -637,12 +539,8 @@ export default function Analytics() {
       ================================================== */}
 
       <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-
         <div className="flex items-center gap-3">
-          <FolderKanban
-            size={21}
-            className="text-violet-600"
-          />
+          <FolderKanban size={21} className="text-violet-600" />
 
           <div>
             <h2 className="text-lg font-bold text-slate-900">
@@ -657,21 +555,16 @@ export default function Analytics() {
 
         {projectProgress.length === 0 ? (
           <div className="mt-8 rounded-xl bg-slate-50 p-8 text-center">
-            <p className="text-sm text-slate-500">
-              No projects available.
-            </p>
+            <p className="text-sm text-slate-500">No projects available.</p>
           </div>
         ) : (
           <div className="mt-6 space-y-5">
-
             {projectProgress.map((project) => (
               <div
                 key={project._id}
                 className="rounded-xl border border-slate-100 p-4"
               >
-
                 <div className="flex flex-wrap items-center justify-between gap-3">
-
                   <div>
                     <h3 className="text-sm font-bold text-slate-800">
                       {project.name}
@@ -679,14 +572,11 @@ export default function Analytics() {
 
                     <p className="mt-1 text-xs text-slate-400">
                       {project.totalTasks} task
-                      {project.totalTasks !== 1
-                        ? "s"
-                        : ""}
+                      {project.totalTasks !== 1 ? "s" : ""}
                     </p>
                   </div>
 
                   <div className="flex items-center gap-3">
-
                     <span className="rounded-full bg-violet-50 px-2.5 py-1 text-xs font-semibold text-violet-700">
                       {project.status}
                     </span>
@@ -694,23 +584,16 @@ export default function Analytics() {
                     <span className="text-sm font-bold text-slate-800">
                       {project.progress}%
                     </span>
-
                   </div>
-
                 </div>
 
                 <div className="mt-3">
-                  <ProgressBar
-                    value={project.progress}
-                  />
+                  <ProgressBar value={project.progress} />
                 </div>
-
               </div>
             ))}
-
           </div>
         )}
-
       </div>
 
       {/* ==================================================
@@ -718,24 +601,16 @@ export default function Analytics() {
       ================================================== */}
 
       <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-
         <div className="flex items-center gap-3">
-
-          <Users
-            size={21}
-            className="text-violet-600"
-          />
+          <Users size={21} className="text-violet-600" />
 
           <div>
-            <h2 className="text-lg font-bold text-slate-900">
-              Team Workload
-            </h2>
+            <h2 className="text-lg font-bold text-slate-900">Team Workload</h2>
 
             <p className="text-sm text-slate-500">
               Tasks assigned to team members
             </p>
           </div>
-
         </div>
 
         {workload.length === 0 ? (
@@ -746,16 +621,10 @@ export default function Analytics() {
           </div>
         ) : (
           <div className="mt-6 grid gap-4 md:grid-cols-2">
-
             {workload.map((member) => {
-
               const completion =
                 member.total > 0
-                  ? Math.round(
-                      (member.completed /
-                        member.total) *
-                        100
-                    )
+                  ? Math.round((member.completed / member.total) * 100)
                   : 0;
 
               return (
@@ -763,15 +632,10 @@ export default function Analytics() {
                   key={member.id}
                   className="rounded-xl border border-slate-100 p-4"
                 >
-
                   <div className="flex items-center justify-between">
-
                     <div className="flex items-center gap-3">
-
                       <div className="grid h-10 w-10 place-items-center rounded-full bg-violet-100 text-sm font-bold text-violet-700">
-                        {member.name
-                          ?.charAt(0)
-                          ?.toUpperCase()}
+                        {member.name?.charAt(0)?.toUpperCase()}
                       </div>
 
                       <div>
@@ -781,45 +645,30 @@ export default function Analytics() {
 
                         <p className="text-xs text-slate-400">
                           {member.total} task
-                          {member.total !== 1
-                            ? "s"
-                            : ""}
+                          {member.total !== 1 ? "s" : ""}
                         </p>
                       </div>
-
                     </div>
 
                     <span className="text-sm font-bold text-slate-700">
                       {completion}%
                     </span>
-
                   </div>
 
                   <div className="mt-4">
-                    <ProgressBar
-                      value={completion}
-                    />
+                    <ProgressBar value={completion} />
                   </div>
 
                   <div className="mt-2 flex justify-between text-xs text-slate-400">
-                    <span>
-                      {member.completed} completed
-                    </span>
+                    <span>{member.completed} completed</span>
 
-                    <span>
-                      {member.total -
-                        member.completed}{" "}
-                      remaining
-                    </span>
+                    <span>{member.total - member.completed} remaining</span>
                   </div>
-
                 </div>
               );
             })}
-
           </div>
         )}
-
       </div>
 
       {/* ==================================================
@@ -828,24 +677,17 @@ export default function Analytics() {
 
       {tasks.length === 0 && (
         <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center">
-
-          <BarChart3
-            size={36}
-            className="mx-auto text-slate-300"
-          />
+          <BarChart3 size={36} className="mx-auto text-slate-300" />
 
           <h3 className="mt-4 text-lg font-semibold text-slate-700">
             No task data yet
           </h3>
 
           <p className="mt-1 text-sm text-slate-500">
-            Create or assign tasks to start seeing
-            analytics.
+            Create or assign tasks to start seeing analytics.
           </p>
-
         </div>
       )}
-
     </div>
   );
 }

@@ -18,7 +18,7 @@ import {
 
 import { useWorkspace } from "../Context/WorkspaceContext";
 
-const API_URL = "http://localhost:5000/api/announcements";
+const API_URL = "https://taskflow-apms.onrender.com";
 
 // ======================================================
 // TYPES
@@ -36,11 +36,7 @@ const announcementTypes = [
   "Urgent Notice",
 ];
 
-const priorities = [
-  "Normal",
-  "Important",
-  "Urgent",
-];
+const priorities = ["Normal", "Important", "Urgent"];
 
 // ======================================================
 // HELPERS
@@ -49,29 +45,23 @@ const priorities = [
 function formatDate(date) {
   if (!date) return "-";
 
-  return new Date(date).toLocaleDateString(
-    "en-IN",
-    {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    }
-  );
+  return new Date(date).toLocaleDateString("en-IN", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
 }
 
 function formatDateTime(date) {
   if (!date) return "-";
 
-  return new Date(date).toLocaleString(
-    "en-IN",
-    {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    }
-  );
+  return new Date(date).toLocaleString("en-IN", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 }
 
 function getTypeIcon(type) {
@@ -159,53 +149,35 @@ const initialForm = {
 // ======================================================
 
 export default function Announcements() {
-  const {
-    role,
-    token,
-    currentUser,
-  } = useWorkspace();
+  const { role, token, currentUser } = useWorkspace();
 
-  const [announcements, setAnnouncements] =
-    useState([]);
+  const [announcements, setAnnouncements] = useState([]);
 
-  const [employees, setEmployees] =
-    useState([]);
+  const [employees, setEmployees] = useState([]);
 
-  const [projects, setProjects] =
-    useState([]);
+  const [projects, setProjects] = useState([]);
 
-  const [loading, setLoading] =
-    useState(true);
+  const [loading, setLoading] = useState(true);
 
-  const [saving, setSaving] =
-    useState(false);
+  const [saving, setSaving] = useState(false);
 
-  const [deletingId, setDeletingId] =
-    useState(null);
+  const [deletingId, setDeletingId] = useState(null);
 
-  const [error, setError] =
-    useState("");
+  const [error, setError] = useState("");
 
-  const [success, setSuccess] =
-    useState("");
+  const [success, setSuccess] = useState("");
 
-  const [showForm, setShowForm] =
-    useState(false);
+  const [showForm, setShowForm] = useState(false);
 
-  const [editingId, setEditingId] =
-    useState(null);
+  const [editingId, setEditingId] = useState(null);
 
-  const [selectedAnnouncement, setSelectedAnnouncement] =
-    useState(null);
+  const [selectedAnnouncement, setSelectedAnnouncement] = useState(null);
 
-  const [search, setSearch] =
-    useState("");
+  const [search, setSearch] = useState("");
 
-  const [filterType, setFilterType] =
-    useState("All");
+  const [filterType, setFilterType] = useState("All");
 
-  const [form, setForm] =
-    useState(initialForm);
+  const [form, setForm] = useState(initialForm);
 
   // ====================================================
   // FETCH ANNOUNCEMENTS
@@ -216,32 +188,23 @@ export default function Announcements() {
       setLoading(true);
       setError("");
 
-      const response = await fetch(
-        API_URL,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await fetch(API_URL, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(
-          data.message ||
-            "Failed to load announcements."
-        );
+        throw new Error(data.message || "Failed to load announcements.");
       }
 
       setAnnouncements(data);
     } catch (error) {
       console.error(error);
 
-      setError(
-        error.message ||
-          "Failed to load announcements."
-      );
+      setError(error.message || "Failed to load announcements.");
     } finally {
       setLoading(false);
     }
@@ -256,12 +219,12 @@ export default function Announcements() {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/api/users/employees",
+        "http://https://taskflow-apms.onrender.com/api/users/employees",
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
 
       const data = await response.json();
@@ -270,10 +233,7 @@ export default function Announcements() {
         setEmployees(data);
       }
     } catch (error) {
-      console.error(
-        "Employees fetch error:",
-        error
-      );
+      console.error("Employees fetch error:", error);
     }
   };
 
@@ -285,28 +245,22 @@ export default function Announcements() {
     try {
       const endpoint =
         role === "employee"
-          ? "http://localhost:5000/api/projects/my"
-          : "http://localhost:5000/api/projects";
+          ? "http://https://taskflow-apms.onrender.com/api/projects/my"
+          : "http://https://taskflow-apms.onrender.com/api/projects";
 
-      const response = await fetch(
-        endpoint,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await fetch(endpoint, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
       const data = await response.json();
-
-      if (response.ok) {
+      //taskflow-apms.onrender.com
+      https: if (response.ok) {
         setProjects(data);
       }
     } catch (error) {
-      console.error(
-        "Projects fetch error:",
-        error
-      );
+      console.error("Projects fetch error:", error);
     }
   };
 
@@ -323,10 +277,7 @@ export default function Announcements() {
   // ====================================================
 
   const handleChange = (event) => {
-    const {
-      name,
-      value,
-    } = event.target;
+    const { name, value } = event.target;
 
     setForm((previous) => ({
       ...previous,
@@ -338,26 +289,16 @@ export default function Announcements() {
   // EMPLOYEE CHECKBOX
   // ====================================================
 
-  const handleEmployeeSelection = (
-    employeeId
-  ) => {
+  const handleEmployeeSelection = (employeeId) => {
     setForm((previous) => {
-      const exists =
-        previous.recipients.includes(
-          employeeId
-        );
+      const exists = previous.recipients.includes(employeeId);
 
       return {
         ...previous,
 
         recipients: exists
-          ? previous.recipients.filter(
-              (id) => id !== employeeId
-            )
-          : [
-              ...previous.recipients,
-              employeeId,
-            ],
+          ? previous.recipients.filter((id) => id !== employeeId)
+          : [...previous.recipients, employeeId],
       };
     });
   };
@@ -371,13 +312,9 @@ export default function Announcements() {
       ...previous,
 
       recipients:
-        previous.recipients.length ===
-        employees.length
+        previous.recipients.length === employees.length
           ? []
-          : employees.map(
-              (employee) =>
-                employee._id
-            ),
+          : employees.map((employee) => employee._id),
     }));
   };
 
@@ -391,10 +328,7 @@ export default function Announcements() {
     setForm({
       ...initialForm,
 
-      audienceType:
-        role === "manager"
-          ? "hr"
-          : "all-employees",
+      audienceType: role === "manager" ? "hr" : "all-employees",
     });
 
     setError("");
@@ -406,68 +340,39 @@ export default function Announcements() {
   // OPEN EDIT
   // ====================================================
 
-  const handleOpenEdit = (
-    announcement
-  ) => {
-    const meeting =
-      announcement.meeting || {};
+  const handleOpenEdit = (announcement) => {
+    const meeting = announcement.meeting || {};
 
-    setEditingId(
-      announcement._id
-    );
+    setEditingId(announcement._id);
 
     setForm({
-      title:
-        announcement.title || "",
+      title: announcement.title || "",
 
-      message:
-        announcement.message || "",
+      message: announcement.message || "",
 
-      type:
-        announcement.type ||
-        "General Information",
+      type: announcement.type || "General Information",
 
-      priority:
-        announcement.priority ||
-        "Normal",
+      priority: announcement.priority || "Normal",
 
-      audienceType:
-        announcement.audienceType ||
-        "all-employees",
+      audienceType: announcement.audienceType || "all-employees",
 
       recipients:
-        announcement.recipients?.map(
-          (user) =>
-            user._id || user
-        ) || [],
+        announcement.recipients?.map((user) => user._id || user) || [],
 
-      meetingDate:
-        meeting.date
-          ? meeting.date.substring(
-              0,
-              10
-            )
-          : "",
+      meetingDate: meeting.date ? meeting.date.substring(0, 10) : "",
 
-      startTime:
-        meeting.startTime || "",
+      startTime: meeting.startTime || "",
 
-      endTime:
-        meeting.endTime || "",
+      endTime: meeting.endTime || "",
 
-      meetingMode:
-        meeting.mode || "Virtual",
+      meetingMode: meeting.mode || "Virtual",
 
-      meetingLink:
-        meeting.meetingLink || "",
+      meetingLink: meeting.meetingLink || "",
 
-      location:
-        meeting.location || "",
+      location: meeting.location || "",
 
       relatedProject:
-        announcement.relatedProject?._id ||
-        announcement.relatedProject ||
-        "",
+        announcement.relatedProject?._id || announcement.relatedProject || "",
     });
 
     setError("");
@@ -490,9 +395,7 @@ export default function Announcements() {
   // SAVE ANNOUNCEMENT
   // ====================================================
 
-  const handleSubmit = async (
-    event
-  ) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
@@ -503,55 +406,32 @@ export default function Announcements() {
       // Validate selected employees
       if (
         role === "hr" &&
-        form.audienceType ===
-          "selected-employees" &&
+        form.audienceType === "selected-employees" &&
         form.recipients.length === 0
       ) {
-        throw new Error(
-          "Please select at least one employee."
-        );
+        throw new Error("Please select at least one employee.");
       }
 
       // Validate meeting
-      if (
-        form.type === "Meeting"
-      ) {
+      if (form.type === "Meeting") {
         if (!form.meetingDate) {
-          throw new Error(
-            "Please select the meeting date."
-          );
+          throw new Error("Please select the meeting date.");
         }
 
         if (!form.startTime) {
-          throw new Error(
-            "Please select the start time."
-          );
+          throw new Error("Please select the start time.");
         }
 
         if (!form.endTime) {
-          throw new Error(
-            "Please select the end time."
-          );
+          throw new Error("Please select the end time.");
         }
 
-        if (
-          form.meetingMode ===
-          "Virtual" &&
-          !form.meetingLink
-        ) {
-          throw new Error(
-            "Please enter the meeting link."
-          );
+        if (form.meetingMode === "Virtual" && !form.meetingLink) {
+          throw new Error("Please enter the meeting link.");
         }
 
-        if (
-          form.meetingMode ===
-          "Office" &&
-          !form.location
-        ) {
-          throw new Error(
-            "Please enter the office location."
-          );
+        if (form.meetingMode === "Office" && !form.location) {
+          throw new Error("Please enter the office location.");
         }
       }
 
@@ -560,30 +440,20 @@ export default function Announcements() {
         message: form.message,
         type: form.type,
         priority: form.priority,
-        audienceType:
-          form.audienceType,
+        audienceType: form.audienceType,
 
         recipients:
-          form.audienceType ===
-          "selected-employees"
-            ? form.recipients
-            : [],
+          form.audienceType === "selected-employees" ? form.recipients : [],
 
         meeting:
           form.type === "Meeting"
             ? {
-                date:
-                  form.meetingDate,
-                startTime:
-                  form.startTime,
-                endTime:
-                  form.endTime,
-                mode:
-                  form.meetingMode,
-                meetingLink:
-                  form.meetingLink,
-                location:
-                  form.location,
+                date: form.meetingDate,
+                startTime: form.startTime,
+                endTime: form.endTime,
+                mode: form.meetingMode,
+                meetingLink: form.meetingLink,
+                location: form.location,
               }
             : {
                 date: null,
@@ -594,72 +464,43 @@ export default function Announcements() {
                 location: "",
               },
 
-        relatedProject:
-          form.relatedProject || null,
+        relatedProject: form.relatedProject || null,
       };
 
-      const url = editingId
-        ? `${API_URL}/${editingId}`
-        : API_URL;
+      const url = editingId ? `${API_URL}/${editingId}` : API_URL;
 
-      const method = editingId
-        ? "PUT"
-        : "POST";
+      const method = editingId ? "PUT" : "POST";
 
-      const response = await fetch(
-        url,
-        {
-          method,
+      const response = await fetch(url, {
+        method,
 
-          headers: {
-            "Content-Type":
-              "application/json",
+        headers: {
+          "Content-Type": "application/json",
 
-            Authorization:
-              `Bearer ${token}`,
-          },
+          Authorization: `Bearer ${token}`,
+        },
 
-          body: JSON.stringify(
-            payload
-          ),
-        }
-      );
+        body: JSON.stringify(payload),
+      });
 
-      const data =
-        await response.json();
+      const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(
-          data.message ||
-            "Failed to save announcement."
-        );
+        throw new Error(data.message || "Failed to save announcement.");
       }
 
       if (editingId) {
-        setAnnouncements(
-          (previous) =>
-            previous.map(
-              (item) =>
-                item._id === editingId
-                  ? data.announcement
-                  : item
-            )
+        setAnnouncements((previous) =>
+          previous.map((item) =>
+            item._id === editingId ? data.announcement : item,
+          ),
         );
 
-        setSuccess(
-          "Announcement updated successfully."
-        );
+        setSuccess("Announcement updated successfully.");
       } else {
-        setAnnouncements(
-          (previous) => [
-            data.announcement,
-            ...previous,
-          ]
-        );
+        setAnnouncements((previous) => [data.announcement, ...previous]);
 
-        setSuccess(
-          "Announcement published successfully."
-        );
+        setSuccess("Announcement published successfully.");
       }
 
       setShowForm(false);
@@ -668,10 +509,7 @@ export default function Announcements() {
     } catch (error) {
       console.error(error);
 
-      setError(
-        error.message ||
-          "Failed to save announcement."
-      );
+      setError(error.message || "Failed to save announcement.");
     } finally {
       setSaving(false);
     }
@@ -681,73 +519,45 @@ export default function Announcements() {
   // DELETE
   // ====================================================
 
-  const handleDelete = async (
-    announcementId
-  ) => {
-    const confirmed =
-      window.confirm(
-        "Are you sure you want to delete this announcement?"
-      );
+  const handleDelete = async (announcementId) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this announcement?",
+    );
 
     if (!confirmed) return;
 
     try {
-      setDeletingId(
-        announcementId
-      );
+      setDeletingId(announcementId);
 
       setError("");
 
-      const response = await fetch(
-        `${API_URL}/${announcementId}`,
-        {
-          method: "DELETE",
+      const response = await fetch(`${API_URL}/${announcementId}`, {
+        method: "DELETE",
 
-          headers: {
-            Authorization:
-              `Bearer ${token}`,
-          },
-        }
-      );
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-      const data =
-        await response.json();
+      const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(
-          data.message ||
-            "Failed to delete announcement."
-        );
+        throw new Error(data.message || "Failed to delete announcement.");
       }
 
-      setAnnouncements(
-        (previous) =>
-          previous.filter(
-            (item) =>
-              item._id !==
-              announcementId
-          )
+      setAnnouncements((previous) =>
+        previous.filter((item) => item._id !== announcementId),
       );
 
-      if (
-        selectedAnnouncement?._id ===
-        announcementId
-      ) {
-        setSelectedAnnouncement(
-          null
-        );
+      if (selectedAnnouncement?._id === announcementId) {
+        setSelectedAnnouncement(null);
       }
 
-      setSuccess(
-        "Announcement deleted successfully."
-      );
+      setSuccess("Announcement deleted successfully.");
     } catch (error) {
       console.error(error);
 
-      setError(
-        error.message ||
-          "Failed to delete announcement."
-      );
+      setError(error.message || "Failed to delete announcement.");
     } finally {
       setDeletingId(null);
     }
@@ -757,69 +567,43 @@ export default function Announcements() {
   // MARK READ
   // ====================================================
 
-  const handleOpenAnnouncement = async (
-    announcement
-  ) => {
+  const handleOpenAnnouncement = async (announcement) => {
     try {
-      const response = await fetch(
-        `${API_URL}/${announcement._id}/read`,
-        {
-          method: "PUT",
+      const response = await fetch(`${API_URL}/${announcement._id}/read`, {
+        method: "PUT",
 
-          headers: {
-            Authorization:
-              `Bearer ${token}`,
-          },
-        }
-      );
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
 
-      const data =
-        await response.json();
+      const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(
-          data.message ||
-            "Failed to mark announcement as read."
-        );
+        throw new Error(data.message || "Failed to mark announcement as read.");
       }
 
-      const updatedAnnouncement =
-        data.announcement || {
-          ...announcement,
-          readBy: [
-            ...(announcement.readBy || []),
-            currentUser?._id ||
-              currentUser?.id,
-          ],
-        };
+      const updatedAnnouncement = data.announcement || {
+        ...announcement,
+        readBy: [
+          ...(announcement.readBy || []),
+          currentUser?._id || currentUser?.id,
+        ],
+      };
 
-      setAnnouncements(
-        (previous) =>
-          previous.map(
-            (item) =>
-              item._id ===
-              announcement._id
-                ? updatedAnnouncement
-                : item
-          )
+      setAnnouncements((previous) =>
+        previous.map((item) =>
+          item._id === announcement._id ? updatedAnnouncement : item,
+        ),
       );
 
-      setSelectedAnnouncement(
-        updatedAnnouncement
-      );
+      setSelectedAnnouncement(updatedAnnouncement);
 
-      window.dispatchEvent(
-        new Event("announcementUpdated")
-      );
+      window.dispatchEvent(new Event("announcementUpdated"));
     } catch (error) {
-      console.error(
-        "Mark read error:",
-        error
-      );
+      console.error("Mark read error:", error);
 
-      setSelectedAnnouncement(
-        announcement
-      );
+      setSelectedAnnouncement(announcement);
     }
   };
 
@@ -827,70 +611,37 @@ export default function Announcements() {
   // FILTER
   // ====================================================
 
-  const filteredAnnouncements =
-    useMemo(() => {
-      return announcements.filter(
-        (announcement) => {
-          const matchesSearch =
-            announcement.title
-              ?.toLowerCase()
-              .includes(
-                search.toLowerCase()
-              ) ||
-            announcement.message
-              ?.toLowerCase()
-              .includes(
-                search.toLowerCase()
-              );
+  const filteredAnnouncements = useMemo(() => {
+    return announcements.filter((announcement) => {
+      const matchesSearch =
+        announcement.title?.toLowerCase().includes(search.toLowerCase()) ||
+        announcement.message?.toLowerCase().includes(search.toLowerCase());
 
-          const matchesType =
-            filterType === "All" ||
-            announcement.type ===
-              filterType;
+      const matchesType =
+        filterType === "All" || announcement.type === filterType;
 
-          return (
-            matchesSearch &&
-            matchesType
-          );
-        }
-      );
-    }, [
-      announcements,
-      search,
-      filterType,
-    ]);
+      return matchesSearch && matchesType;
+    });
+  }, [announcements, search, filterType]);
 
   // ====================================================
   // UNREAD
   // ====================================================
 
-  const currentUserId =
-    currentUser?._id ||
-    currentUser?.id ||
-    "";
+  const currentUserId = currentUser?._id || currentUser?.id || "";
 
-  const unreadCount =
-    announcements.filter(
-      (announcement) => {
-        if (!currentUserId) {
-          return false;
-        }
+  const unreadCount = announcements.filter((announcement) => {
+    if (!currentUserId) {
+      return false;
+    }
 
-        return !announcement.readBy?.some(
-          (user) => {
-            const readUserId =
-              typeof user === "object"
-                ? user?._id || user?.id
-                : user;
+    return !announcement.readBy?.some((user) => {
+      const readUserId =
+        typeof user === "object" ? user?._id || user?.id : user;
 
-            return (
-              String(readUserId) ===
-              String(currentUserId)
-            );
-          }
-        );
-      }
-    ).length;
+      return String(readUserId) === String(currentUserId);
+    });
+  }).length;
 
   // ====================================================
   // RENDER
@@ -898,16 +649,13 @@ export default function Announcements() {
 
   return (
     <div className="space-y-6">
-
       {/* ==================================================
           HEADER
       ================================================== */}
 
       <div className="flex flex-wrap items-start justify-between gap-4">
-
         <div>
           <div className="flex items-center gap-3">
-
             <div className="grid h-11 w-11 place-items-center rounded-xl bg-violet-100 text-violet-700">
               <Megaphone size={22} />
             </div>
@@ -918,28 +666,21 @@ export default function Announcements() {
               </h1>
 
               <p className="mt-1 text-sm text-slate-500">
-                Company updates, important information
-                and team communication.
+                Company updates, important information and team communication.
               </p>
             </div>
-
           </div>
         </div>
 
-        {(role === "manager" ||
-          role === "hr") && (
+        {(role === "manager" || role === "hr") && (
           <button
-            onClick={
-              handleOpenCreate
-            }
+            onClick={handleOpenCreate}
             className="inline-flex items-center gap-2 rounded-xl bg-violet-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-violet-700"
           >
             <Plus size={17} />
-
             New Announcement
           </button>
         )}
-
       </div>
 
       {/* ==================================================
@@ -950,11 +691,7 @@ export default function Announcements() {
         <div className="flex items-start justify-between gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
           <span>{error}</span>
 
-          <button
-            onClick={() =>
-              setError("")
-            }
-          >
+          <button onClick={() => setError("")}>
             <X size={17} />
           </button>
         </div>
@@ -973,12 +710,9 @@ export default function Announcements() {
       ================================================== */}
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-
         <div className="rounded-2xl border border-slate-200 bg-white p-5">
           <div className="flex items-center justify-between">
-            <span className="text-sm text-slate-500">
-              Total
-            </span>
+            <span className="text-sm text-slate-500">Total</span>
 
             <div className="grid h-9 w-9 place-items-center rounded-lg bg-violet-50 text-violet-600">
               <Megaphone size={18} />
@@ -989,16 +723,12 @@ export default function Announcements() {
             {announcements.length}
           </p>
 
-          <p className="mt-1 text-xs text-slate-400">
-            Available announcements
-          </p>
+          <p className="mt-1 text-xs text-slate-400">Available announcements</p>
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-5">
           <div className="flex items-center justify-between">
-            <span className="text-sm text-slate-500">
-              Unread
-            </span>
+            <span className="text-sm text-slate-500">Unread</span>
 
             <div className="grid h-9 w-9 place-items-center rounded-lg bg-red-50 text-red-600">
               <Bell size={18} />
@@ -1009,16 +739,12 @@ export default function Announcements() {
             {unreadCount}
           </p>
 
-          <p className="mt-1 text-xs text-slate-400">
-            Information to review
-          </p>
+          <p className="mt-1 text-xs text-slate-400">Information to review</p>
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-5">
           <div className="flex items-center justify-between">
-            <span className="text-sm text-slate-500">
-              Meetings
-            </span>
+            <span className="text-sm text-slate-500">Meetings</span>
 
             <div className="grid h-9 w-9 place-items-center rounded-lg bg-blue-50 text-blue-600">
               <CalendarDays size={18} />
@@ -1026,25 +752,15 @@ export default function Announcements() {
           </div>
 
           <p className="mt-3 text-2xl font-bold text-slate-900">
-            {
-              announcements.filter(
-                (item) =>
-                  item.type ===
-                  "Meeting"
-              ).length
-            }
+            {announcements.filter((item) => item.type === "Meeting").length}
           </p>
 
-          <p className="mt-1 text-xs text-slate-400">
-            Meeting announcements
-          </p>
+          <p className="mt-1 text-xs text-slate-400">Meeting announcements</p>
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-5">
           <div className="flex items-center justify-between">
-            <span className="text-sm text-slate-500">
-              Important
-            </span>
+            <span className="text-sm text-slate-500">Important</span>
 
             <div className="grid h-9 w-9 place-items-center rounded-lg bg-orange-50 text-orange-600">
               <Info size={18} />
@@ -1052,20 +768,11 @@ export default function Announcements() {
           </div>
 
           <p className="mt-3 text-2xl font-bold text-slate-900">
-            {
-              announcements.filter(
-                (item) =>
-                  item.priority !==
-                  "Normal"
-              ).length
-            }
+            {announcements.filter((item) => item.priority !== "Normal").length}
           </p>
 
-          <p className="mt-1 text-xs text-slate-400">
-            Important information
-          </p>
+          <p className="mt-1 text-xs text-slate-400">Important information</p>
         </div>
-
       </div>
 
       {/* ==================================================
@@ -1073,9 +780,7 @@ export default function Announcements() {
       ================================================== */}
 
       <div className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-4 md:flex-row">
-
         <div className="relative flex-1">
-
           <Megaphone
             size={17}
             className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
@@ -1085,41 +790,24 @@ export default function Announcements() {
             type="text"
             placeholder="Search announcements..."
             value={search}
-            onChange={(event) =>
-              setSearch(
-                event.target.value
-              )
-            }
+            onChange={(event) => setSearch(event.target.value)}
             className="w-full rounded-xl border border-slate-200 py-2.5 pl-10 pr-4 text-sm outline-none focus:border-violet-500"
           />
-
         </div>
 
         <select
           value={filterType}
-          onChange={(event) =>
-            setFilterType(
-              event.target.value
-            )
-          }
+          onChange={(event) => setFilterType(event.target.value)}
           className="rounded-xl border border-slate-200 px-4 py-2.5 text-sm outline-none focus:border-violet-500"
         >
-          <option value="All">
-            All Types
-          </option>
+          <option value="All">All Types</option>
 
-          {announcementTypes.map(
-            (type) => (
-              <option
-                key={type}
-                value={type}
-              >
-                {type}
-              </option>
-            )
-          )}
+          {announcementTypes.map((type) => (
+            <option key={type} value={type}>
+              {type}
+            </option>
+          ))}
         </select>
-
       </div>
 
       {/* ==================================================
@@ -1128,42 +816,29 @@ export default function Announcements() {
 
       {showForm && (
         <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-
           <div className="mb-6 flex items-start justify-between">
-
             <div>
               <h2 className="text-lg font-bold text-slate-900">
-                {editingId
-                  ? "Edit Announcement"
-                  : "Create Announcement"}
+                {editingId ? "Edit Announcement" : "Create Announcement"}
               </h2>
 
               <p className="mt-1 text-sm text-slate-500">
-                Share important information
-                with your team.
+                Share important information with your team.
               </p>
             </div>
 
             <button
-              onClick={
-                handleCloseForm
-              }
+              onClick={handleCloseForm}
               className="rounded-lg p-2 text-slate-400 hover:bg-slate-100"
             >
               <X size={20} />
             </button>
-
           </div>
 
-          <form
-            onSubmit={handleSubmit}
-            className="grid gap-5 md:grid-cols-2"
-          >
-
+          <form onSubmit={handleSubmit} className="grid gap-5 md:grid-cols-2">
             {/* TITLE */}
 
             <div className="md:col-span-2">
-
               <label className="mb-1.5 block text-sm font-semibold text-slate-700">
                 Title
               </label>
@@ -1177,13 +852,11 @@ export default function Announcements() {
                 required
                 className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-violet-500"
               />
-
             </div>
 
             {/* TYPE */}
 
             <div>
-
               <label className="mb-1.5 block text-sm font-semibold text-slate-700">
                 Announcement Type
               </label>
@@ -1194,24 +867,17 @@ export default function Announcements() {
                 onChange={handleChange}
                 className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-violet-500"
               >
-                {announcementTypes.map(
-                  (type) => (
-                    <option
-                      key={type}
-                      value={type}
-                    >
-                      {type}
-                    </option>
-                  )
-                )}
+                {announcementTypes.map((type) => (
+                  <option key={type} value={type}>
+                    {type}
+                  </option>
+                ))}
               </select>
-
             </div>
 
             {/* PRIORITY */}
 
             <div>
-
               <label className="mb-1.5 block text-sm font-semibold text-slate-700">
                 Priority
               </label>
@@ -1222,24 +888,17 @@ export default function Announcements() {
                 onChange={handleChange}
                 className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-violet-500"
               >
-                {priorities.map(
-                  (priority) => (
-                    <option
-                      key={priority}
-                      value={priority}
-                    >
-                      {priority}
-                    </option>
-                  )
-                )}
+                {priorities.map((priority) => (
+                  <option key={priority} value={priority}>
+                    {priority}
+                  </option>
+                ))}
               </select>
-
             </div>
 
             {/* MESSAGE */}
 
             <div className="md:col-span-2">
-
               <label className="mb-1.5 block text-sm font-semibold text-slate-700">
                 Message
               </label>
@@ -1253,22 +912,18 @@ export default function Announcements() {
                 required
                 className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-violet-500"
               />
-
             </div>
 
             {/* AUDIENCE */}
 
             <div className="md:col-span-2">
-
               <label className="mb-2 block text-sm font-semibold text-slate-700">
                 Send To
               </label>
 
               {role === "manager" ? (
                 <div className="rounded-xl border border-violet-200 bg-violet-50 p-4">
-
                   <div className="flex items-center gap-3">
-
                     <div className="grid h-10 w-10 place-items-center rounded-lg bg-violet-100 text-violet-700">
                       <Users size={19} />
                     </div>
@@ -1282,146 +937,96 @@ export default function Announcements() {
                         This announcement will be sent to HR.
                       </p>
                     </div>
-
                   </div>
-
                 </div>
               ) : (
                 <div className="grid gap-3 sm:grid-cols-2">
-
                   <label className="cursor-pointer rounded-xl border border-slate-200 p-4 hover:border-violet-300">
-
                     <input
                       type="radio"
                       name="audienceType"
                       value="all-employees"
-                      checked={
-                        form.audienceType ===
-                        "all-employees"
-                      }
-                      onChange={
-                        handleChange
-                      }
+                      checked={form.audienceType === "all-employees"}
+                      onChange={handleChange}
                       className="mr-2"
                     />
 
                     <span className="text-sm font-semibold text-slate-700">
                       All Employees
                     </span>
-
                   </label>
 
                   <label className="cursor-pointer rounded-xl border border-slate-200 p-4 hover:border-violet-300">
-
                     <input
                       type="radio"
                       name="audienceType"
                       value="selected-employees"
-                      checked={
-                        form.audienceType ===
-                        "selected-employees"
-                      }
-                      onChange={
-                        handleChange
-                      }
+                      checked={form.audienceType === "selected-employees"}
+                      onChange={handleChange}
                       className="mr-2"
                     />
 
                     <span className="text-sm font-semibold text-slate-700">
                       Selected Employees
                     </span>
-
                   </label>
-
                 </div>
               )}
-
             </div>
 
             {/* EMPLOYEE LIST */}
 
-            {role === "hr" &&
-              form.audienceType ===
-                "selected-employees" && (
-                <div className="md:col-span-2 rounded-xl border border-slate-200 bg-slate-50 p-4">
+            {role === "hr" && form.audienceType === "selected-employees" && (
+              <div className="md:col-span-2 rounded-xl border border-slate-200 bg-slate-50 p-4">
+                <div className="mb-3 flex items-center justify-between">
+                  <p className="text-sm font-semibold text-slate-700">
+                    Select Employees
+                  </p>
 
-                  <div className="mb-3 flex items-center justify-between">
-
-                    <p className="text-sm font-semibold text-slate-700">
-                      Select Employees
-                    </p>
-
-                    <button
-                      type="button"
-                      onClick={
-                        handleSelectAllEmployees
-                      }
-                      className="text-xs font-semibold text-violet-600 hover:text-violet-700"
-                    >
-                      {form.recipients
-                        .length ===
-                      employees.length
-                        ? "Clear All"
-                        : "Select All"}
-                    </button>
-
-                  </div>
-
-                  <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-
-                    {employees.map(
-                      (employee) => (
-                        <label
-                          key={
-                            employee._id
-                          }
-                          className="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-200 bg-white p-3 hover:border-violet-300"
-                        >
-
-                          <input
-                            type="checkbox"
-                            checked={form.recipients.includes(
-                              employee._id
-                            )}
-                            onChange={() =>
-                              handleEmployeeSelection(
-                                employee._id
-                              )
-                            }
-                            className="h-4 w-4"
-                          />
-
-                          <div>
-                            <p className="text-sm font-semibold text-slate-700">
-                              {
-                                employee.name
-                              }
-                            </p>
-
-                            <p className="text-xs text-slate-400">
-                              {
-                                employee.email
-                              }
-                            </p>
-                          </div>
-
-                        </label>
-                      )
-                    )}
-
-                  </div>
-
+                  <button
+                    type="button"
+                    onClick={handleSelectAllEmployees}
+                    className="text-xs font-semibold text-violet-600 hover:text-violet-700"
+                  >
+                    {form.recipients.length === employees.length
+                      ? "Clear All"
+                      : "Select All"}
+                  </button>
                 </div>
-              )}
+
+                <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                  {employees.map((employee) => (
+                    <label
+                      key={employee._id}
+                      className="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-200 bg-white p-3 hover:border-violet-300"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={form.recipients.includes(employee._id)}
+                        onChange={() => handleEmployeeSelection(employee._id)}
+                        className="h-4 w-4"
+                      />
+
+                      <div>
+                        <p className="text-sm font-semibold text-slate-700">
+                          {employee.name}
+                        </p>
+
+                        <p className="text-xs text-slate-400">
+                          {employee.email}
+                        </p>
+                      </div>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* MEETING */}
 
-            {form.type ===
-              "Meeting" && (
+            {form.type === "Meeting" && (
               <div className="md:col-span-2 rounded-2xl border border-violet-100 bg-violet-50 p-5">
-
                 <div className="mb-4 flex items-center gap-3">
-
                   <div className="grid h-10 w-10 place-items-center rounded-lg bg-violet-100 text-violet-700">
                     <CalendarDays size={19} />
                   </div>
@@ -1435,11 +1040,9 @@ export default function Announcements() {
                       Add the meeting information for attendees.
                     </p>
                   </div>
-
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-3">
-
                   <div>
                     <label className="mb-1.5 block text-xs font-semibold text-slate-600">
                       Date
@@ -1448,12 +1051,8 @@ export default function Announcements() {
                     <input
                       type="date"
                       name="meetingDate"
-                      value={
-                        form.meetingDate
-                      }
-                      onChange={
-                        handleChange
-                      }
+                      value={form.meetingDate}
+                      onChange={handleChange}
                       className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-violet-500"
                     />
                   </div>
@@ -1466,12 +1065,8 @@ export default function Announcements() {
                     <input
                       type="time"
                       name="startTime"
-                      value={
-                        form.startTime
-                      }
-                      onChange={
-                        handleChange
-                      }
+                      value={form.startTime}
+                      onChange={handleChange}
                       className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-violet-500"
                     />
                   </div>
@@ -1484,78 +1079,53 @@ export default function Announcements() {
                     <input
                       type="time"
                       name="endTime"
-                      value={
-                        form.endTime
-                      }
-                      onChange={
-                        handleChange
-                      }
+                      value={form.endTime}
+                      onChange={handleChange}
                       className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-violet-500"
                     />
                   </div>
-
                 </div>
 
                 <div className="mt-4">
-
                   <label className="mb-2 block text-xs font-semibold text-slate-600">
                     Meeting Mode
                   </label>
 
                   <div className="grid gap-3 sm:grid-cols-2">
-
                     <label className="cursor-pointer rounded-xl border border-slate-200 bg-white p-3">
-
                       <input
                         type="radio"
                         name="meetingMode"
                         value="Virtual"
-                        checked={
-                          form.meetingMode ===
-                          "Virtual"
-                        }
-                        onChange={
-                          handleChange
-                        }
+                        checked={form.meetingMode === "Virtual"}
+                        onChange={handleChange}
                         className="mr-2"
                       />
 
                       <span className="text-sm font-semibold text-slate-700">
                         🟣 Virtual Meeting
                       </span>
-
                     </label>
 
                     <label className="cursor-pointer rounded-xl border border-slate-200 bg-white p-3">
-
                       <input
                         type="radio"
                         name="meetingMode"
                         value="Office"
-                        checked={
-                          form.meetingMode ===
-                          "Office"
-                        }
-                        onChange={
-                          handleChange
-                        }
+                        checked={form.meetingMode === "Office"}
+                        onChange={handleChange}
                         className="mr-2"
                       />
 
                       <span className="text-sm font-semibold text-slate-700">
                         🟢 Office Meeting
                       </span>
-
                     </label>
-
                   </div>
-
                 </div>
 
-                {form.meetingMode ===
-                  "Virtual" && (
+                {form.meetingMode === "Virtual" && (
                   <div className="mt-4">
-
                     <label className="mb-1.5 block text-xs font-semibold text-slate-600">
                       Meeting Link
                     </label>
@@ -1563,23 +1133,16 @@ export default function Announcements() {
                     <input
                       type="url"
                       name="meetingLink"
-                      value={
-                        form.meetingLink
-                      }
-                      onChange={
-                        handleChange
-                      }
+                      value={form.meetingLink}
+                      onChange={handleChange}
                       placeholder="https://meet.google.com/..."
                       className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-violet-500"
                     />
-
                   </div>
                 )}
 
-                {form.meetingMode ===
-                  "Office" && (
+                {form.meetingMode === "Office" && (
                   <div className="mt-4">
-
                     <label className="mb-1.5 block text-xs font-semibold text-slate-600">
                       Office Location
                     </label>
@@ -1587,19 +1150,13 @@ export default function Announcements() {
                     <input
                       type="text"
                       name="location"
-                      value={
-                        form.location
-                      }
-                      onChange={
-                        handleChange
-                      }
+                      value={form.location}
+                      onChange={handleChange}
                       placeholder="Conference Room 2"
                       className="w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm outline-none focus:border-violet-500"
                     />
-
                   </div>
                 )}
-
               </div>
             )}
 
@@ -1607,7 +1164,6 @@ export default function Announcements() {
 
             {projects.length > 0 && (
               <div className="md:col-span-2">
-
                 <label className="mb-1.5 block text-sm font-semibold text-slate-700">
                   Related Project
                   <span className="ml-1 font-normal text-slate-400">
@@ -1617,34 +1173,18 @@ export default function Announcements() {
 
                 <select
                   name="relatedProject"
-                  value={
-                    form.relatedProject
-                  }
-                  onChange={
-                    handleChange
-                  }
+                  value={form.relatedProject}
+                  onChange={handleChange}
                   className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-violet-500"
                 >
-                  <option value="">
-                    No project
-                  </option>
+                  <option value="">No project</option>
 
-                  {projects.map(
-                    (project) => (
-                      <option
-                        key={
-                          project._id
-                        }
-                        value={
-                          project._id
-                        }
-                      >
-                        {project.name}
-                      </option>
-                    )
-                  )}
+                  {projects.map((project) => (
+                    <option key={project._id} value={project._id}>
+                      {project.name}
+                    </option>
+                  ))}
                 </select>
-
               </div>
             )}
 
@@ -1659,12 +1199,9 @@ export default function Announcements() {
             {/* BUTTONS */}
 
             <div className="flex justify-end gap-3 md:col-span-2">
-
               <button
                 type="button"
-                onClick={
-                  handleCloseForm
-                }
+                onClick={handleCloseForm}
                 className="rounded-xl border border-slate-200 px-5 py-2.5 text-sm font-semibold text-slate-600 hover:bg-slate-50"
               >
                 Cancel
@@ -1678,14 +1215,11 @@ export default function Announcements() {
                 {saving
                   ? "Saving..."
                   : editingId
-                  ? "Save Changes"
-                  : "Publish Announcement"}
+                    ? "Save Changes"
+                    : "Publish Announcement"}
               </button>
-
             </div>
-
           </form>
-
         </section>
       )}
 
@@ -1694,13 +1228,9 @@ export default function Announcements() {
       ================================================== */}
 
       <section className="rounded-2xl border border-slate-200 bg-white p-5">
-
         <div className="mb-5 flex items-center justify-between">
-
           <div>
-            <h2 className="font-bold text-slate-900">
-              Company Updates
-            </h2>
+            <h2 className="font-bold text-slate-900">Company Updates</h2>
 
             <p className="mt-1 text-sm text-slate-500">
               Latest information from your organization.
@@ -1710,7 +1240,6 @@ export default function Announcements() {
           <span className="rounded-full bg-violet-50 px-3 py-1.5 text-xs font-semibold text-violet-700">
             {filteredAnnouncements.length} updates
           </span>
-
         </div>
 
         {loading ? (
@@ -1721,14 +1250,9 @@ export default function Announcements() {
               Loading announcements...
             </p>
           </div>
-        ) : filteredAnnouncements.length ===
-          0 ? (
+        ) : filteredAnnouncements.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-slate-300 p-10 text-center">
-
-            <Megaphone
-              size={34}
-              className="mx-auto text-slate-300"
-            />
+            <Megaphone size={34} className="mx-auto text-slate-300" />
 
             <h3 className="mt-3 font-semibold text-slate-700">
               No announcements
@@ -1737,271 +1261,176 @@ export default function Announcements() {
             <p className="mt-1 text-sm text-slate-400">
               There are no announcements matching your search.
             </p>
-
           </div>
         ) : (
           <div className="space-y-3">
+            {filteredAnnouncements.map((announcement) => {
+              const Icon = getTypeIcon(announcement.type);
 
-            {filteredAnnouncements.map(
-              (announcement) => {
-                const Icon =
-                  getTypeIcon(
-                    announcement.type
-                  );
+              const currentUserId = currentUser?._id || currentUser?.id || "";
 
-                const currentUserId =
-                  currentUser?._id ||
-                  currentUser?.id ||
-                  "";
+              const isRead =
+                Boolean(currentUserId) &&
+                announcement.readBy?.some((user) => {
+                  const readUserId =
+                    typeof user === "object" ? user?._id || user?.id : user;
 
-                const isRead =
-                  Boolean(currentUserId) &&
-                  announcement.readBy?.some(
-                    (user) => {
-                      const readUserId =
-                        typeof user === "object"
-                          ? user?._id || user?.id
-                          : user;
+                  return String(readUserId) === String(currentUserId);
+                });
 
-                      return (
-                        String(readUserId) ===
-                        String(currentUserId)
-                      );
-                    }
-                  );
+              const isUnread = !isRead;
 
-                const isUnread = !isRead;
+              const isCreator =
+                String(
+                  announcement.createdBy?._id ||
+                    announcement.createdBy?.id ||
+                    announcement.createdBy ||
+                    "",
+                ) === String(currentUserId);
 
-                const isCreator =
-                  String(
-                    announcement.createdBy?._id ||
-                      announcement.createdBy?.id ||
-                      announcement.createdBy ||
-                      ""
-                  ) ===
-                  String(currentUserId);
-
-                return (
-                  <div
-                    key={
-                      announcement._id
-                    }
-                    className={`group rounded-2xl border p-5 transition hover:border-violet-200 hover:shadow-sm ${
-                      isUnread
-                        ? "border-violet-200 bg-violet-50/30"
-                        : "border-slate-200 bg-white"
-                    }`}
-                  >
-
-                    <div className="flex items-start gap-4">
-
-                      <div
-                        className={`grid h-11 w-11 shrink-0 place-items-center rounded-xl ${getTypeStyle(
-                          announcement.type
-                        )}`}
-                      >
-                        <Icon size={21} />
-                      </div>
-
-                      <div className="min-w-0 flex-1">
-
-                        <div className="flex flex-wrap items-start justify-between gap-3">
-
-                          <div>
-
-                            <div className="flex flex-wrap items-center gap-2">
-
-                              <h3 className="font-bold text-slate-800">
-                                {
-                                  announcement.title
-                                }
-                              </h3>
-
-                              {isUnread && (
-                                <span className="rounded-full bg-violet-600 px-2 py-0.5 text-[10px] font-bold text-white">
-                                  NEW
-                                </span>
-                              )}
-
-                            </div>
-
-                            <div className="mt-2 flex flex-wrap items-center gap-2">
-
-                              <span
-                                className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${getTypeStyle(
-                                  announcement.type
-                                )}`}
-                              >
-                                {
-                                  announcement.type
-                                }
-                              </span>
-
-                              <span
-                                className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${getPriorityStyle(
-                                  announcement.priority
-                                )}`}
-                              >
-                                {
-                                  announcement.priority
-                                }
-                              </span>
-
-                            </div>
-
-                          </div>
-
-                          <span className="shrink-0 text-xs text-slate-400">
-                            {formatDateTime(
-                              announcement.createdAt
-                            )}
-                          </span>
-
-                        </div>
-
-                        <p className="mt-3 line-clamp-2 text-sm leading-6 text-slate-600">
-                          {
-                            announcement.message
-                          }
-                        </p>
-
-                        <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-slate-500">
-
-                          <span>
-                            By{" "}
-                            <strong>
-                              {
-                                announcement.createdByName
-                              }
-                            </strong>
-                          </span>
-
-                          {announcement.audienceType ===
-                            "all-employees" && (
-                            <span className="rounded-full bg-slate-100 px-2.5 py-1">
-                              All Employees
-                            </span>
-                          )}
-
-                          {announcement.audienceType ===
-                            "selected-employees" && (
-                            <span className="rounded-full bg-slate-100 px-2.5 py-1">
-                              {
-                                announcement
-                                  .recipients
-                                  ?.length
-                              }{" "}
-                              Employees
-                            </span>
-                          )}
-
-                          {announcement.audienceType ===
-                            "hr" && (
-                            <span className="rounded-full bg-violet-50 px-2.5 py-1 text-violet-700">
-                              HR
-                            </span>
-                          )}
-
-                          {announcement.type ===
-                            "Meeting" &&
-                            announcement.meeting && (
-                              <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2.5 py-1 text-blue-700">
-                                <Clock
-                                  size={12}
-                                />
-
-                                {
-                                  announcement
-                                    .meeting
-                                    .startTime
-                                }
-                              </span>
-                            )}
-
-                          {!isUnread && (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-green-50 px-2.5 py-1 font-semibold text-green-700">
-                              <Check size={12} />
-                              Read
-                            </span>
-                          )}
-
-                        </div>
-
-                        {/* ACTIONS */}
-
-                        <div className="mt-4 flex flex-wrap gap-2">
-
-                          <button
-                            onClick={() =>
-                              handleOpenAnnouncement(
-                                announcement
-                              )
-                            }
-                            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 hover:border-violet-300 hover:text-violet-700"
-                          >
-                            View Details
-
-                            <ChevronRight
-                              size={14}
-                            />
-                          </button>
-
-                          {role !==
-                            "employee" && (
-                            <>
-                              <button
-                                onClick={() =>
-                                  handleOpenEdit(
-                                    announcement
-                                  )
-                                }
-                                className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50"
-                              >
-                                <Edit3
-                                  size={14}
-                                />
-
-                                Edit
-                              </button>
-
-                              <button
-                                onClick={() =>
-                                  handleDelete(
-                                    announcement._id
-                                  )
-                                }
-                                disabled={
-                                  deletingId ===
-                                  announcement._id
-                                }
-                                className="inline-flex items-center gap-1.5 rounded-lg bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-100 disabled:opacity-50"
-                              >
-                                <Trash2
-                                  size={14}
-                                />
-
-                                {deletingId ===
-                                announcement._id
-                                  ? "Deleting..."
-                                  : "Delete"}
-                              </button>
-                            </>
-                          )}
-
-                        </div>
-
-                      </div>
-
+              return (
+                <div
+                  key={announcement._id}
+                  className={`group rounded-2xl border p-5 transition hover:border-violet-200 hover:shadow-sm ${
+                    isUnread
+                      ? "border-violet-200 bg-violet-50/30"
+                      : "border-slate-200 bg-white"
+                  }`}
+                >
+                  <div className="flex items-start gap-4">
+                    <div
+                      className={`grid h-11 w-11 shrink-0 place-items-center rounded-xl ${getTypeStyle(
+                        announcement.type,
+                      )}`}
+                    >
+                      <Icon size={21} />
                     </div>
 
-                  </div>
-                );
-              }
-            )}
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-start justify-between gap-3">
+                        <div>
+                          <div className="flex flex-wrap items-center gap-2">
+                            <h3 className="font-bold text-slate-800">
+                              {announcement.title}
+                            </h3>
 
+                            {isUnread && (
+                              <span className="rounded-full bg-violet-600 px-2 py-0.5 text-[10px] font-bold text-white">
+                                NEW
+                              </span>
+                            )}
+                          </div>
+
+                          <div className="mt-2 flex flex-wrap items-center gap-2">
+                            <span
+                              className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${getTypeStyle(
+                                announcement.type,
+                              )}`}
+                            >
+                              {announcement.type}
+                            </span>
+
+                            <span
+                              className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${getPriorityStyle(
+                                announcement.priority,
+                              )}`}
+                            >
+                              {announcement.priority}
+                            </span>
+                          </div>
+                        </div>
+
+                        <span className="shrink-0 text-xs text-slate-400">
+                          {formatDateTime(announcement.createdAt)}
+                        </span>
+                      </div>
+
+                      <p className="mt-3 line-clamp-2 text-sm leading-6 text-slate-600">
+                        {announcement.message}
+                      </p>
+
+                      <div className="mt-4 flex flex-wrap items-center gap-3 text-xs text-slate-500">
+                        <span>
+                          By <strong>{announcement.createdByName}</strong>
+                        </span>
+
+                        {announcement.audienceType === "all-employees" && (
+                          <span className="rounded-full bg-slate-100 px-2.5 py-1">
+                            All Employees
+                          </span>
+                        )}
+
+                        {announcement.audienceType === "selected-employees" && (
+                          <span className="rounded-full bg-slate-100 px-2.5 py-1">
+                            {announcement.recipients?.length} Employees
+                          </span>
+                        )}
+
+                        {announcement.audienceType === "hr" && (
+                          <span className="rounded-full bg-violet-50 px-2.5 py-1 text-violet-700">
+                            HR
+                          </span>
+                        )}
+
+                        {announcement.type === "Meeting" &&
+                          announcement.meeting && (
+                            <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2.5 py-1 text-blue-700">
+                              <Clock size={12} />
+
+                              {announcement.meeting.startTime}
+                            </span>
+                          )}
+
+                        {!isUnread && (
+                          <span className="inline-flex items-center gap-1 rounded-full bg-green-50 px-2.5 py-1 font-semibold text-green-700">
+                            <Check size={12} />
+                            Read
+                          </span>
+                        )}
+                      </div>
+
+                      {/* ACTIONS */}
+
+                      <div className="mt-4 flex flex-wrap gap-2">
+                        <button
+                          onClick={() => handleOpenAnnouncement(announcement)}
+                          className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 hover:border-violet-300 hover:text-violet-700"
+                        >
+                          View Details
+                          <ChevronRight size={14} />
+                        </button>
+
+                        {role !== "employee" && (
+                          <>
+                            <button
+                              onClick={() => handleOpenEdit(announcement)}
+                              className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-600 hover:bg-slate-50"
+                            >
+                              <Edit3 size={14} />
+                              Edit
+                            </button>
+
+                            <button
+                              onClick={() => handleDelete(announcement._id)}
+                              disabled={deletingId === announcement._id}
+                              className="inline-flex items-center gap-1.5 rounded-lg bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-100 disabled:opacity-50"
+                            >
+                              <Trash2 size={14} />
+
+                              {deletingId === announcement._id
+                                ? "Deleting..."
+                                : "Delete"}
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         )}
-
       </section>
 
       {/* ==================================================
@@ -2010,266 +1439,163 @@ export default function Announcements() {
 
       {selectedAnnouncement && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4">
-
           <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white shadow-2xl">
-
             <div className="sticky top-0 flex items-start justify-between border-b border-slate-200 bg-white p-5">
-
               <div>
                 <div className="flex items-center gap-3">
-
                   <div
                     className={`grid h-10 w-10 place-items-center rounded-lg ${getTypeStyle(
-                      selectedAnnouncement.type
+                      selectedAnnouncement.type,
                     )}`}
                   >
                     {(() => {
-                      const Icon =
-                        getTypeIcon(
-                          selectedAnnouncement.type
-                        );
+                      const Icon = getTypeIcon(selectedAnnouncement.type);
 
-                      return (
-                        <Icon
-                          size={19}
-                        />
-                      );
+                      return <Icon size={19} />;
                     })()}
                   </div>
 
                   <div>
                     <h2 className="text-lg font-bold text-slate-900">
-                      {
-                        selectedAnnouncement.title
-                      }
+                      {selectedAnnouncement.title}
                     </h2>
 
                     <p className="text-xs text-slate-400">
-                      Published{" "}
-                      {formatDateTime(
-                        selectedAnnouncement.createdAt
-                      )}
+                      Published {formatDateTime(selectedAnnouncement.createdAt)}
                     </p>
                   </div>
-
                 </div>
               </div>
 
               <button
-                onClick={() =>
-                  setSelectedAnnouncement(
-                    null
-                  )
-                }
+                onClick={() => setSelectedAnnouncement(null)}
                 className="rounded-lg p-2 text-slate-400 hover:bg-slate-100"
               >
                 <X size={20} />
               </button>
-
             </div>
 
             <div className="space-y-5 p-6">
-
               <div className="flex flex-wrap gap-2">
-
                 <span
                   className={`rounded-full px-3 py-1.5 text-xs font-semibold ${getTypeStyle(
-                    selectedAnnouncement.type
+                    selectedAnnouncement.type,
                   )}`}
                 >
-                  {
-                    selectedAnnouncement.type
-                  }
+                  {selectedAnnouncement.type}
                 </span>
 
                 <span
                   className={`rounded-full px-3 py-1.5 text-xs font-semibold ${getPriorityStyle(
-                    selectedAnnouncement.priority
+                    selectedAnnouncement.priority,
                   )}`}
                 >
-                  {
-                    selectedAnnouncement.priority
-                  }
+                  {selectedAnnouncement.priority}
                 </span>
-
               </div>
 
               <div className="rounded-xl bg-slate-50 p-5">
-
                 <p className="whitespace-pre-wrap text-sm leading-7 text-slate-700">
-                  {
-                    selectedAnnouncement.message
-                  }
+                  {selectedAnnouncement.message}
                 </p>
-
               </div>
 
               {/* MEETING DETAILS */}
 
-              {selectedAnnouncement.type ===
-                "Meeting" &&
+              {selectedAnnouncement.type === "Meeting" &&
                 selectedAnnouncement.meeting && (
                   <div className="rounded-2xl border border-violet-100 bg-violet-50 p-5">
-
                     <h3 className="font-bold text-slate-800">
                       Meeting Details
                     </h3>
 
                     <div className="mt-4 grid gap-3 sm:grid-cols-2">
-
                       <div className="rounded-xl bg-white p-3">
-                        <p className="text-xs text-slate-400">
-                          Date
-                        </p>
+                        <p className="text-xs text-slate-400">Date</p>
 
                         <p className="mt-1 text-sm font-semibold text-slate-700">
-                          {formatDate(
-                            selectedAnnouncement
-                              .meeting
-                              .date
-                          )}
+                          {formatDate(selectedAnnouncement.meeting.date)}
                         </p>
                       </div>
 
                       <div className="rounded-xl bg-white p-3">
-                        <p className="text-xs text-slate-400">
-                          Time
-                        </p>
+                        <p className="text-xs text-slate-400">Time</p>
 
                         <p className="mt-1 text-sm font-semibold text-slate-700">
-                          {
-                            selectedAnnouncement
-                              .meeting
-                              .startTime
-                          }{" "}
-                          -{" "}
-                          {
-                            selectedAnnouncement
-                              .meeting
-                              .endTime
-                          }
+                          {selectedAnnouncement.meeting.startTime} -{" "}
+                          {selectedAnnouncement.meeting.endTime}
                         </p>
                       </div>
 
                       <div className="rounded-xl bg-white p-3">
-                        <p className="text-xs text-slate-400">
-                          Mode
-                        </p>
+                        <p className="text-xs text-slate-400">Mode</p>
 
                         <p className="mt-1 text-sm font-semibold text-slate-700">
-                          {
-                            selectedAnnouncement
-                              .meeting
-                              .mode
-                          }
+                          {selectedAnnouncement.meeting.mode}
                         </p>
                       </div>
 
-                      {selectedAnnouncement
-                        .meeting
-                        .mode ===
-                        "Office" && (
+                      {selectedAnnouncement.meeting.mode === "Office" && (
                         <div className="rounded-xl bg-white p-3">
-                          <p className="text-xs text-slate-400">
-                            Location
-                          </p>
+                          <p className="text-xs text-slate-400">Location</p>
 
                           <p className="mt-1 text-sm font-semibold text-slate-700">
-                            {
-                              selectedAnnouncement
-                                .meeting
-                                .location
-                            }
+                            {selectedAnnouncement.meeting.location}
                           </p>
                         </div>
                       )}
-
                     </div>
 
-                    {selectedAnnouncement
-                      .meeting
-                      .mode ===
-                      "Virtual" &&
-                      selectedAnnouncement
-                        .meeting
-                        .meetingLink && (
+                    {selectedAnnouncement.meeting.mode === "Virtual" &&
+                      selectedAnnouncement.meeting.meetingLink && (
                         <a
-                          href={
-                            selectedAnnouncement
-                              .meeting
-                              .meetingLink
-                          }
+                          href={selectedAnnouncement.meeting.meetingLink}
                           target="_blank"
                           rel="noreferrer"
                           className="mt-4 inline-flex items-center gap-2 rounded-xl bg-violet-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-violet-700"
                         >
                           Join Meeting
-                          <ChevronRight
-                            size={16}
-                          />
+                          <ChevronRight size={16} />
                         </a>
                       )}
-
                   </div>
                 )}
 
               {/* PROJECT */}
 
-              {selectedAnnouncement
-                .relatedProject
-                ?.name && (
+              {selectedAnnouncement.relatedProject?.name && (
                 <div className="rounded-xl border border-slate-200 p-4">
-
-                  <p className="text-xs text-slate-400">
-                    Related Project
-                  </p>
+                  <p className="text-xs text-slate-400">Related Project</p>
 
                   <p className="mt-1 text-sm font-semibold text-slate-700">
-                    {
-                      selectedAnnouncement
-                        .relatedProject
-                        .name
-                    }
+                    {selectedAnnouncement.relatedProject.name}
                   </p>
-
                 </div>
               )}
 
               {/* PUBLISHED BY */}
 
               <div className="flex items-center gap-3 border-t border-slate-100 pt-4">
-
                 <div className="grid h-9 w-9 place-items-center rounded-full bg-violet-100 text-sm font-bold text-violet-700">
-                  {selectedAnnouncement
-                    .createdByName
-                    ?.charAt(0)
-                    .toUpperCase()}
+                  {selectedAnnouncement.createdByName?.charAt(0).toUpperCase()}
                 </div>
 
                 <div>
                   <p className="text-sm font-semibold text-slate-700">
-                    {
-                      selectedAnnouncement.createdByName
-                    }
+                    {selectedAnnouncement.createdByName}
                   </p>
 
                   <p className="text-xs text-slate-400">
-                    {selectedAnnouncement.createdByRole ===
-                    "hr"
+                    {selectedAnnouncement.createdByRole === "hr"
                       ? "HR"
                       : "Manager"}
                   </p>
                 </div>
-
               </div>
-
             </div>
-
           </div>
-
         </div>
       )}
-
-    </div> 
+    </div>
   );
 }
