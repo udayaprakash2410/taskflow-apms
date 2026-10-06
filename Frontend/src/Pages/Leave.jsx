@@ -38,7 +38,7 @@ export default function Leave() {
       setError("");
 
       const response = await fetch(
-        "http://https://taskflow-apms.onrender.com/api/leaves/my",
+        "https://taskflow-apms.onrender.com/api/leaves/my",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -72,7 +72,7 @@ export default function Leave() {
       setError("");
 
       const response = await fetch(
-        "http://https://taskflow-apms.onrender.com/api/leaves",
+        "https://taskflow-apms.onrender.com/api/leaves",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -136,7 +136,7 @@ export default function Leave() {
 
     try {
       const response = await fetch(
-        "http://https://taskflow-apms.onrender.com/api/leaves",
+        "https://taskflow-apms.onrender.com/api/leaves",
         {
           method: "POST",
           headers: {
@@ -183,7 +183,7 @@ export default function Leave() {
 
     try {
       const response = await fetch(
-        `http://https://taskflow-apms.onrender.com/api/leaves/${leaveId}/approve`,
+        `https://taskflow-apms.onrender.com/api/leaves/${leaveId}/approve`,
         {
           method: "PUT",
           headers: {
@@ -221,7 +221,7 @@ export default function Leave() {
 
     try {
       const response = await fetch(
-        `http://https://taskflow-apms.onrender.com/api/leaves/${leaveId}/reject`,
+        `https://taskflow-apms.onrender.com/api/leaves/${leaveId}/reject`,
         {
           method: "PUT",
           headers: {

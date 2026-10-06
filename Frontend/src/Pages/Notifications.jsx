@@ -21,7 +21,7 @@ export default function Notifications() {
       setError("");
 
       const response = await fetch(
-        "http://https://taskflow-apms.onrender.com/api/notifications",
+        "https://taskflow-apms.onrender.com/api/notifications",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -65,7 +65,7 @@ export default function Notifications() {
       setMarkingId(notificationId);
 
       const response = await fetch(
-        `http://https://taskflow-apms.onrender.com/api/notifications/${notificationId}/read`,
+        `https://taskflow-apms.onrender.com/api/notifications/${notificationId}/read`,
         {
           method: "PUT",
           headers: {
@@ -112,7 +112,7 @@ export default function Notifications() {
       setError("");
 
       const response = await fetch(
-        "http://https://taskflow-apms.onrender.com/api/notifications/read-all",
+        "https://taskflow-apms.onrender.com/api/notifications/read-all",
         {
           method: "PUT",
           headers: {

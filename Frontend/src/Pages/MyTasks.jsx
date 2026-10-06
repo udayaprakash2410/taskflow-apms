@@ -80,7 +80,7 @@ export default function MyTasks() {
         setNotice("");
 
         const response = await fetch(
-          "http://https://taskflow-apms.onrender.com/api/tasks",
+          "https://taskflow-apms.onrender.com/api/tasks",
           {
             method: "POST",
             headers: {
@@ -101,7 +101,7 @@ export default function MyTasks() {
 
         if (selectedAssignee) {
           const assignResponse = await fetch(
-            `http://https://taskflow-apms.onrender.com/api/tasks/${createdTask._id}/assign`,
+            `https://taskflow-apms.onrender.com/api/tasks/${createdTask._id}/assign`,
             {
               method: "PUT",
               headers: {
@@ -172,8 +172,8 @@ export default function MyTasks() {
 
         const response = await fetch(
           role === "employee"
-            ? "http://https://taskflow-apms.onrender.com/api/tasks/my"
-            : "http://https://taskflow-apms.onrender.com/api/tasks",
+            ? "https://taskflow-apms.onrender.com/api/tasks/my"
+            : "https://taskflow-apms.onrender.com/api/tasks",
           {
             method: "GET",
             headers: {
@@ -208,10 +208,10 @@ export default function MyTasks() {
 
     if (role === "manager") {
       Promise.all([
-        fetch("http://https://taskflow-apms.onrender.com/api/projects", {
+        fetch("https://taskflow-apms.onrender.com/api/projects", {
           headers: { Authorization: `Bearer ${token}` },
         }),
-        fetch("http://https://taskflow-apms.onrender.com/api/users/employees", {
+        fetch("https://taskflow-apms.onrender.com/api/users/employees", {
           headers: { Authorization: `Bearer ${token}` },
         }),
       ])
@@ -236,7 +236,7 @@ export default function MyTasks() {
       setError("");
 
       const response = await fetch(
-        `http://https://taskflow-apms.onrender.com/api/tasks/${taskId}/status`,
+        `https://taskflow-apms.onrender.com/api/tasks/${taskId}/status`,
         {
           method: "PUT",
           headers: {
@@ -295,7 +295,7 @@ export default function MyTasks() {
       setNotice("");
 
       const response = await fetch(
-        "http://https://taskflow-apms.onrender.com/api/tasks",
+        "https://taskflow-apms.onrender.com/api/tasks",
         {
           method: "POST",
           headers: {
@@ -316,7 +316,7 @@ export default function MyTasks() {
 
       if (selectedAssignee) {
         const assignResponse = await fetch(
-          `http://https://taskflow-apms.onrender.com/api/tasks/${createdTask._id}/assign`,
+          `https://taskflow-apms.onrender.com/api/tasks/${createdTask._id}/assign`,
           {
             method: "PUT",
             headers: {
@@ -583,7 +583,7 @@ export default function MyTasks() {
                   setNotice("");
 
                   const response = await fetch(
-                    "http://https://taskflow-apms.onrender.com/api/tasks",
+                    "https://taskflow-apms.onrender.com/api/tasks",
                     {
                       method: "POST",
                       headers: {
@@ -604,7 +604,7 @@ export default function MyTasks() {
 
                   if (selectedAssignee) {
                     const assignResponse = await fetch(
-                      `http://https://taskflow-apms.onrender.com/api/tasks/${createdTask._id}/assign`,
+                      `https://taskflow-apms.onrender.com/api/tasks/${createdTask._id}/assign`,
                       {
                         method: "PUT",
                         headers: {
@@ -791,7 +791,7 @@ export default function MyTasks() {
                   setNotice("");
 
                   const response = await fetch(
-                    "http://https://taskflow-apms.onrender.com/api/tasks",
+                    "https://taskflow-apms.onrender.com/api/tasks",
                     {
                       method: "POST",
                       headers: {
@@ -812,7 +812,7 @@ export default function MyTasks() {
 
                   if (selectedAssignee) {
                     const assignResponse = await fetch(
-                      `http://https://taskflow-apms.onrender.com/api/tasks/${createdTask._id}/assign`,
+                      `https://taskflow-apms.onrender.com/api/tasks/${createdTask._id}/assign`,
                       {
                         method: "PUT",
                         headers: {

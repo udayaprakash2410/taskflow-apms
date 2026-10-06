@@ -219,7 +219,7 @@ export default function Announcements() {
 
     try {
       const response = await fetch(
-        "http://https://taskflow-apms.onrender.com/api/users/employees",
+        "https://taskflow-apms.onrender.com/api/users/employees",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -245,8 +245,8 @@ export default function Announcements() {
     try {
       const endpoint =
         role === "employee"
-          ? "http://https://taskflow-apms.onrender.com/api/projects/my"
-          : "http://https://taskflow-apms.onrender.com/api/projects";
+          ? "https://taskflow-apms.onrender.com/api/projects/my"
+          : "https://taskflow-apms.onrender.com/api/projects";
 
       const response = await fetch(endpoint, {
         headers: {

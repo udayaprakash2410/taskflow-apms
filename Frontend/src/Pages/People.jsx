@@ -50,7 +50,7 @@ export default function People() {
       setError("");
 
       const employeesResponse = await fetch(
-        "http://https://taskflow-apms.onrender.com/api/users/employees",
+        "https://taskflow-apms.onrender.com/api/users/employees",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -68,7 +68,7 @@ export default function People() {
 
       if (role === "manager") {
         const hrResponse = await fetch(
-          "http://https://taskflow-apms.onrender.com/api/users/hr",
+          "https://taskflow-apms.onrender.com/api/users/hr",
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -142,16 +142,15 @@ export default function People() {
     if (formType === "employee") {
       if (role === "manager") {
         endpoint =
-          "http://https://taskflow-apms.onrender.com/api/auth/manager/add-employee";
+          "https://taskflow-apms.onrender.com/api/auth/manager/add-employee";
       } else if (role === "hr") {
         endpoint =
-          "http://https://taskflow-apms.onrender.com/api/auth/hr/add-employee";
+          "https://taskflow-apms.onrender.com/api/auth/hr/add-employee";
       }
     }
 
     if (formType === "hr" && role === "manager") {
-      endpoint =
-        "http://https://taskflow-apms.onrender.com/api/auth/manager/add-hr";
+      endpoint = "https://taskflow-apms.onrender.com/api/auth/manager/add-hr";
     }
 
     if (!endpoint) {
@@ -243,7 +242,7 @@ export default function People() {
 
     try {
       const response = await fetch(
-        `http://https://taskflow-apms.onrender.com/api/users/employees/${selectedEmployee._id}`,
+        `https://taskflow-apms.onrender.com/api/users/employees/${selectedEmployee._id}`,
         {
           method: "PUT",
           headers: {
@@ -301,7 +300,7 @@ export default function People() {
       setMessage("");
 
       const response = await fetch(
-        `http://https://taskflow-apms.onrender.com/api/users/employees/${employee._id}`,
+        `https://taskflow-apms.onrender.com/api/users/employees/${employee._id}`,
         {
           method: "DELETE",
           headers: {

@@ -86,7 +86,7 @@ export default function Navbar() {
 
       if (role === "employee") {
         const response = await fetch(
-          "http://https://taskflow-apms.onrender.com/api/projects/my",
+          "https://taskflow-apms.onrender.com/api/projects/my",
           {
             headers,
           },
@@ -97,7 +97,7 @@ export default function Navbar() {
         }
       } else {
         const response = await fetch(
-          "http://https://taskflow-apms.onrender.com/api/projects",
+          "https://taskflow-apms.onrender.com/api/projects",
           {
             headers,
           },
@@ -134,7 +134,7 @@ export default function Navbar() {
 
       if (role === "employee") {
         const response = await fetch(
-          "http://https://taskflow-apms.onrender.com/api/tasks/my",
+          "https://taskflow-apms.onrender.com/api/tasks/my",
           {
             headers,
           },
@@ -145,7 +145,7 @@ export default function Navbar() {
         }
       } else if (role === "manager" || role === "hr") {
         const response = await fetch(
-          "http://https://taskflow-apms.onrender.com/api/tasks",
+          "https://taskflow-apms.onrender.com/api/tasks",
           {
             headers,
           },
@@ -180,7 +180,7 @@ export default function Navbar() {
 
       if (role === "manager" || role === "hr") {
         const response = await fetch(
-          "http://https://taskflow-apms.onrender.com/api/users/employees",
+          "https://taskflow-apms.onrender.com/api/users/employees",
           {
             headers,
           },
@@ -215,7 +215,7 @@ export default function Navbar() {
 
       if (role === "manager") {
         const response = await fetch(
-          "http://https://taskflow-apms.onrender.com/api/users/hr",
+          "https://taskflow-apms.onrender.com/api/users/hr",
           {
             headers,
           },

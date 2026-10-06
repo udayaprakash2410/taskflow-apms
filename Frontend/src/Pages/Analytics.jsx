@@ -12,7 +12,7 @@ import {
 
 import { useWorkspace } from "../Context/WorkspaceContext";
 
-const API_URL = "http://https://taskflow-apms.onrender.com/api";
+const API_URL = "https://taskflow-apms.onrender.com/api";
 
 const statusColors = {
   "To Do": "bg-slate-400",

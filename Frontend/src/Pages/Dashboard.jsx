@@ -62,7 +62,7 @@ export default function Dashboard() {
         if (role === "employee") {
           // Employee → only assigned projects
           const response = await fetch(
-            "http://https://taskflow-apms.onrender.com/api/projects/my",
+            "https://taskflow-apms.onrender.com/api/projects/my",
             {
               headers,
             },
@@ -78,7 +78,7 @@ export default function Dashboard() {
         } else if (role === "manager" || role === "hr") {
           // Manager + HR → all company projects
           const response = await fetch(
-            "http://https://taskflow-apms.onrender.com/api/projects",
+            "https://taskflow-apms.onrender.com/api/projects",
             {
               headers,
             },
@@ -104,7 +104,7 @@ export default function Dashboard() {
         if (role === "employee") {
           // Employee → only assigned tasks
           const response = await fetch(
-            "http://https://taskflow-apms.onrender.com/api/tasks/my",
+            "https://taskflow-apms.onrender.com/api/tasks/my",
             {
               headers,
             },
@@ -120,7 +120,7 @@ export default function Dashboard() {
         } else if (role === "manager" || role === "hr") {
           // Manager + HR → all company tasks
           const response = await fetch(
-            "http://https://taskflow-apms.onrender.com/api/tasks",
+            "https://taskflow-apms.onrender.com/api/tasks",
             {
               headers,
             },
@@ -143,7 +143,7 @@ export default function Dashboard() {
 
         if (role === "manager" || role === "hr") {
           const response = await fetch(
-            "http://https://taskflow-apms.onrender.com/api/users/employees",
+            "https://taskflow-apms.onrender.com/api/users/employees",
             {
               headers,
             },
@@ -163,7 +163,7 @@ export default function Dashboard() {
         // ==================================================
 
         const activityResponse = await fetch(
-          "http://https://taskflow-apms.onrender.com/api/activities/dashboard",
+          "https://taskflow-apms.onrender.com/api/activities/dashboard",
           {
             headers,
           },

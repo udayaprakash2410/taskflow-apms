@@ -54,7 +54,7 @@ export default function Sidebar() {
       if (!token) return;
 
       const response = await fetch(
-        "http://https://taskflow-apms.onrender.com/api/notifications/unread-count",
+        "https://taskflow-apms.onrender.com/api/notifications/unread-count",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -89,7 +89,7 @@ export default function Sidebar() {
       }
 
       const response = await fetch(
-        "http://https://taskflow-apms.onrender.com/api/activities/unread-count",
+        "https://taskflow-apms.onrender.com/api/activities/unread-count",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -119,7 +119,7 @@ export default function Sidebar() {
       if (!token) return;
 
       const response = await fetch(
-        "http://https://taskflow-apms.onrender.com/api/announcements/unread/count",
+        "https://taskflow-apms.onrender.com/api/announcements/unread/count",
         {
           headers: {
             Authorization: `Bearer ${token}`,

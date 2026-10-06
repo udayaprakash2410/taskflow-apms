@@ -21,7 +21,7 @@ export function AuthProvider({ children }) {
   const login = async (email, password) => {
     try {
       const response = await fetch(
-        "http://https://taskflow-apms.onrender.com/api/auth/login",
+        "https://taskflow-apms.onrender.com/api/auth/login",
         {
           method: "POST",
           headers: {

@@ -42,11 +42,11 @@ export default function Projects() {
       setLoading(true);
       setError("");
 
-      let url = "http://https://taskflow-apms.onrender.com/api/projects";
+      let url = "https://taskflow-apms.onrender.com/api/projects";
 
       // Employee gets only assigned projects
       if (role === "employee") {
-        url = "http://https://taskflow-apms.onrender.com/api/projects/my";
+        url = "https://taskflow-apms.onrender.com/api/projects/my";
       }
 
       const response = await fetch(url, {
@@ -105,7 +105,7 @@ export default function Projects() {
       setError("");
 
       const response = await fetch(
-        "http://https://taskflow-apms.onrender.com/api/projects",
+        "https://taskflow-apms.onrender.com/api/projects",
         {
           method: "POST",
 

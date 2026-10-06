@@ -28,7 +28,7 @@ export default function Activity() {
       if (!token) return;
 
       const response = await fetch(
-        "http://https://taskflow-apms.onrender.com/api/activities/mark-read",
+        "https://taskflow-apms.onrender.com/api/activities/mark-read",
         {
           method: "PUT",
           headers: {
@@ -77,7 +77,7 @@ export default function Activity() {
       // --------------------------------------------------
 
       const response = await fetch(
-        "http://https://taskflow-apms.onrender.com/api/activities",
+        "https://taskflow-apms.onrender.com/api/activities",
         {
           headers: {
             Authorization: `Bearer ${token}`,

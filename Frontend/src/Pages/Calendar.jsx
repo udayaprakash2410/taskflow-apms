@@ -21,8 +21,8 @@ export default function Calendar() {
       try {
         const response = await fetch(
           role === "employee"
-            ? "http://https://taskflow-apms.onrender.com/api/tasks/my"
-            : "http://https://taskflow-apms.onrender.com/api/tasks",
+            ? "https://taskflow-apms.onrender.com/api/tasks/my"
+            : "https://taskflow-apms.onrender.com/api/tasks",
           {
             headers: {
               Authorization: `Bearer ${token}`,

@@ -148,7 +148,7 @@ export default function ProjectDetails() {
       setError("");
 
       const response = await fetch(
-        `http://https://taskflow-apms.onrender.com/api/projects/${projectId}`,
+        `https://taskflow-apms.onrender.com/api/projects/${projectId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -195,7 +195,7 @@ export default function ProjectDetails() {
       setMemberError("");
 
       const response = await fetch(
-        "http://https://taskflow-apms.onrender.com/api/users/employees",
+        "https://taskflow-apms.onrender.com/api/users/employees",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -266,7 +266,7 @@ export default function ProjectDetails() {
       setMemberMessage("");
 
       const response = await fetch(
-        `http://https://taskflow-apms.onrender.com/api/projects/${projectId}/members`,
+        `https://taskflow-apms.onrender.com/api/projects/${projectId}/members`,
         {
           method: "PUT",
 
@@ -316,7 +316,7 @@ export default function ProjectDetails() {
       setTaskError("");
 
       const response = await fetch(
-        `http://https://taskflow-apms.onrender.com/api/tasks/project/${projectId}`,
+        `https://taskflow-apms.onrender.com/api/tasks/project/${projectId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -363,7 +363,7 @@ export default function ProjectDetails() {
       setActivityError("");
 
       const response = await fetch(
-        `http://https://taskflow-apms.onrender.com/api/activities/project/${projectId}`,
+        `https://taskflow-apms.onrender.com/api/activities/project/${projectId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -462,8 +462,8 @@ export default function ProjectDetails() {
       setTaskError("");
 
       const url = editingTaskId
-        ? `http://https://taskflow-apms.onrender.com/api/tasks/${editingTaskId}`
-        : "http://https://taskflow-apms.onrender.com/api/tasks";
+        ? `https://taskflow-apms.onrender.com/api/tasks/${editingTaskId}`
+        : "https://taskflow-apms.onrender.com/api/tasks";
 
       const method = editingTaskId ? "PUT" : "POST";
 
@@ -491,7 +491,7 @@ export default function ProjectDetails() {
       // When creating a task, optionally assign it immediately.
       if (!editingTaskId && selectedTaskEmployeeId) {
         const assignResponse = await fetch(
-          `http://https://taskflow-apms.onrender.com/api/tasks/${savedTask._id}/assign`,
+          `https://taskflow-apms.onrender.com/api/tasks/${savedTask._id}/assign`,
           {
             method: "PUT",
             headers: {
@@ -567,7 +567,7 @@ export default function ProjectDetails() {
       setTaskError("");
 
       const response = await fetch(
-        `http://https://taskflow-apms.onrender.com/api/tasks/${taskId}`,
+        `https://taskflow-apms.onrender.com/api/tasks/${taskId}`,
         {
           method: "DELETE",
 
@@ -603,7 +603,7 @@ export default function ProjectDetails() {
       setTaskAssignmentError("");
 
       const response = await fetch(
-        `http://https://taskflow-apms.onrender.com/api/tasks/${taskId}/assign`,
+        `https://taskflow-apms.onrender.com/api/tasks/${taskId}/assign`,
         {
           method: "PUT",
 
@@ -682,7 +682,7 @@ export default function ProjectDetails() {
       setError("");
 
       const response = await fetch(
-        `http://https://taskflow-apms.onrender.com/api/projects/${projectId}`,
+        `https://taskflow-apms.onrender.com/api/projects/${projectId}`,
         {
           method: "PUT",
 
@@ -728,7 +728,7 @@ export default function ProjectDetails() {
       setError("");
 
       const response = await fetch(
-        `http://https://taskflow-apms.onrender.com/api/projects/${projectId}`,
+        `https://taskflow-apms.onrender.com/api/projects/${projectId}`,
         {
           method: "DELETE",
 

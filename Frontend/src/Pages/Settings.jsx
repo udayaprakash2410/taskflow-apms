@@ -14,7 +14,7 @@ import {
 
 import { useWorkspace } from "../Context/WorkspaceContext";
 
-const API_URL = "http://https://taskflow-apms.onrender.com/api";
+const API_URL = "https://taskflow-apms.onrender.com/api";
 
 export default function Settings() {
   const { role, token, currentUser, logout } = useWorkspace();
