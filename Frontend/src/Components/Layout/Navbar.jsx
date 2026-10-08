@@ -1,8 +1,6 @@
 import { Bell, LogOut, Menu, Search } from "lucide-react";
-
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 import { useAuth } from "../../Context/WorkspaceContext";
 
 export default function Navbar() {
@@ -265,6 +263,18 @@ export default function Navbar() {
     navigate(result.path);
   };
 
+  // ======================================================
+  // MOBILE MENU
+  // ======================================================
+
+  const openMobileSidebar = () => {
+    window.dispatchEvent(new Event("toggleMobileSidebar"));
+  };
+
+  // ======================================================
+  // UI
+  // ======================================================
+
   return (
     <header className="sticky top-0 z-20 flex h-[72px] items-center justify-between border-b border-slate-200 bg-white/90 px-4 backdrop-blur sm:px-6 lg:px-8">
       {/* ==================================================
@@ -272,7 +282,15 @@ export default function Navbar() {
       ================================================== */}
 
       <div className="flex items-center gap-3">
-        <Menu className="text-slate-600 lg:hidden" />
+        {/* MOBILE MENU BUTTON */}
+        <button
+          type="button"
+          onClick={openMobileSidebar}
+          className="rounded-lg p-2 text-slate-600 hover:bg-slate-100 lg:hidden"
+          aria-label="Open menu"
+        >
+          <Menu size={22} />
+        </button>
 
         {/* ==================================================
             SEARCH

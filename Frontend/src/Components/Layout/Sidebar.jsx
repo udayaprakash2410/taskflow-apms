@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+
 import {
   Activity,
   BarChart3,
@@ -11,7 +12,9 @@ import {
   Palmtree,
   Settings,
   UsersRound,
+  X,
 } from "lucide-react";
+
 import { NavLink } from "react-router-dom";
 import { useAuth } from "../../Context/WorkspaceContext";
 
@@ -41,9 +44,41 @@ const projectLinks = [
 export default function Sidebar() {
   const { role, token } = useAuth();
 
+  const [mobileOpen, setMobileOpen] = useState(false);
+
   const [unreadCount, setUnreadCount] = useState(0);
   const [unreadActivityCount, setUnreadActivityCount] = useState(0);
   const [unreadAnnouncementCount, setUnreadAnnouncementCount] = useState(0);
+
+  // ======================================================
+  // MOBILE SIDEBAR
+  // ======================================================
+
+  useEffect(() => {
+    const toggleSidebar = () => {
+      setMobileOpen((current) => !current);
+    };
+
+    window.addEventListener("toggleMobileSidebar", toggleSidebar);
+
+    return () => {
+      window.removeEventListener("toggleMobileSidebar", toggleSidebar);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) {
+        setMobileOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   // ======================================================
   // NOTIFICATION UNREAD COUNT
@@ -59,7 +94,7 @@ export default function Sidebar() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        },
+        }
       );
 
       const data = await response.json();
@@ -94,7 +129,7 @@ export default function Sidebar() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        },
+        }
       );
 
       const data = await response.json();
@@ -124,7 +159,7 @@ export default function Sidebar() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        },
+        }
       );
 
       const data = await response.json();
@@ -161,12 +196,15 @@ export default function Sidebar() {
       fetchUnreadCount();
     };
 
-    window.addEventListener("notificationUpdated", handleNotificationUpdate);
+    window.addEventListener(
+      "notificationUpdated",
+      handleNotificationUpdate
+    );
 
     return () => {
       window.removeEventListener(
         "notificationUpdated",
-        handleNotificationUpdate,
+        handleNotificationUpdate
       );
     };
   }, [token]);
@@ -183,7 +221,10 @@ export default function Sidebar() {
     window.addEventListener("activityUpdated", handleActivityUpdate);
 
     return () => {
-      window.removeEventListener("activityUpdated", handleActivityUpdate);
+      window.removeEventListener(
+        "activityUpdated",
+        handleActivityUpdate
+      );
     };
   }, [token, role]);
 
@@ -196,12 +237,15 @@ export default function Sidebar() {
       fetchUnreadAnnouncementCount();
     };
 
-    window.addEventListener("announcementUpdated", handleAnnouncementUpdate);
+    window.addEventListener(
+      "announcementUpdated",
+      handleAnnouncementUpdate
+    );
 
     return () => {
       window.removeEventListener(
         "announcementUpdated",
-        handleAnnouncementUpdate,
+        handleAnnouncementUpdate
       );
     };
   }, [token, role]);
@@ -251,6 +295,7 @@ export default function Sidebar() {
   // ------------------------------------------------------
   // HR
   // ------------------------------------------------------
+
   else if (role === "hr") {
     links = [
       {
@@ -295,6 +340,7 @@ export default function Sidebar() {
   // ------------------------------------------------------
   // MANAGER
   // ------------------------------------------------------
+
   else if (role === "manager") {
     links = [
       ...projectLinks,
@@ -346,53 +392,140 @@ export default function Sidebar() {
   const link = (path) => `/${role}${path}`;
 
   // ======================================================
+  // CLOSE MOBILE SIDEBAR
+  // ======================================================
+
+  const closeMobileSidebar = () => {
+    setMobileOpen(false);
+  };
+
+  // ======================================================
   // UI
   // ======================================================
 
   return (
-    <aside className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-72 lg:flex-col lg:overflow-y-auto lg:border-r lg:border-slate-200 lg:bg-white lg:p-5">
-      {/* BRAND */}
-      <div className="mb-8 flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-900 text-white">
-          <span className="text-lg font-bold">T</span>
+    <>
+      {/* Mobile overlay */}
+      {mobileOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/40 lg:hidden"
+          onClick={closeMobileSidebar}
+        />
+      )}
+
+      {/* Sidebar */}
+      <aside
+        className={`fixed inset-y-0 left-0 z-50 flex w-72 flex-col overflow-y-auto border-r border-slate-200 bg-white p-5 transition-transform duration-300 lg:static lg:z-auto lg:flex lg:translate-x-0 ${
+          mobileOpen
+            ? "translate-x-0"
+            : "-translate-x-full lg:translate-x-0"
+        }`}
+      >
+        {/* MOBILE CLOSE BUTTON */}
+        <div className="mb-5 flex items-center justify-end lg:hidden">
+          <button
+            type="button"
+            onClick={closeMobileSidebar}
+            className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-900"
+            aria-label="Close menu"
+          >
+            <X size={22} />
+          </button>
         </div>
 
-        <div>
-          <h1 className="text-lg font-bold text-slate-900">TaskFlow</h1>
+        {/* BRAND */}
+        <div className="mb-8 flex items-center gap-3">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-900 text-white">
+            <span className="text-lg font-bold">T</span>
+          </div>
 
-          <p className="text-xs text-slate-500">Project management</p>
+          <div>
+            <h1 className="text-lg font-bold text-slate-900">
+              TaskFlow
+            </h1>
+
+            <p className="text-xs text-slate-500">
+              Project management
+            </p>
+          </div>
         </div>
-      </div>
 
-      {/* WORKSPACE */}
-      <div className="mb-5">
-        <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
-          Signed-in workspace
-        </p>
+        {/* WORKSPACE */}
+        <div className="mb-5">
+          <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-400">
+            Signed-in workspace
+          </p>
 
-        <div className="rounded-xl bg-slate-50 px-3 py-3">
-          <p className="text-sm font-semibold text-slate-800">
-            {role === "manager"
-              ? "Manager panel"
-              : role === "hr"
+          <div className="rounded-xl bg-slate-50 px-3 py-3">
+            <p className="text-sm font-semibold text-slate-800">
+              {role === "manager"
+                ? "Manager panel"
+                : role === "hr"
                 ? "HR panel"
                 : "Employee panel"}
-          </p>
+            </p>
+          </div>
         </div>
-      </div>
 
-      {/* NAVIGATION */}
-      <nav className="space-y-1">
-        {links.map(({ name, path, icon: Icon, badge }) => (
-          <NavLink
-            key={path}
-            to={link(path)}
-            end={path === ""}
-            onClick={() => {
-              if (name === "Activity") {
-                setUnreadActivityCount(0);
+        {/* NAVIGATION */}
+        <nav className="space-y-1">
+          {links.map(({ name, path, icon: Icon, badge }) => (
+            <NavLink
+              key={path}
+              to={link(path)}
+              end={path === ""}
+              onClick={() => {
+                if (name === "Activity") {
+                  setUnreadActivityCount(0);
+                }
+
+                closeMobileSidebar();
+              }}
+              className={({ isActive }) =>
+                `group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition ${
+                  isActive
+                    ? "bg-slate-900 text-white shadow-sm"
+                    : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                }`
               }
-            }}
+            >
+              {({ isActive }) => (
+                <>
+                  <Icon
+                    size={19}
+                    className={
+                      isActive
+                        ? "text-white"
+                        : "text-slate-500 group-hover:text-slate-900"
+                    }
+                  />
+
+                  <span>{name}</span>
+
+                  {/* ACTIVITY BADGE */}
+                  {name === "Activity" && badge > 0 && (
+                    <span className="ml-auto rounded-full bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-600">
+                      {badge > 99 ? "99+" : badge}
+                    </span>
+                  )}
+
+                  {/* ANNOUNCEMENT BADGE */}
+                  {name === "Announcements" && badge > 0 && (
+                    <span className="ml-auto rounded-full bg-violet-100 px-2 py-0.5 text-xs font-semibold text-violet-600">
+                      {badge > 99 ? "99+" : badge}
+                    </span>
+                  )}
+                </>
+              )}
+            </NavLink>
+          ))}
+        </nav>
+
+        {/* NOTIFICATIONS */}
+        <div className="mt-3">
+          <NavLink
+            to={link("/notifications")}
+            onClick={closeMobileSidebar}
             className={({ isActive }) =>
               `group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition ${
                 isActive
@@ -403,7 +536,7 @@ export default function Sidebar() {
           >
             {({ isActive }) => (
               <>
-                <Icon
+                <Bell
                   size={19}
                   className={
                     isActive
@@ -412,61 +545,18 @@ export default function Sidebar() {
                   }
                 />
 
-                <span>{name}</span>
+                <span>Notifications</span>
 
-                {/* ACTIVITY BADGE */}
-                {name === "Activity" && badge > 0 && (
-                  <span className="ml-auto rounded-full bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-600">
-                    {badge > 99 ? "99+" : badge}
-                  </span>
-                )}
-
-                {/* ANNOUNCEMENT BADGE */}
-                {name === "Announcements" && badge > 0 && (
+                {unreadCount > 0 && (
                   <span className="ml-auto rounded-full bg-violet-100 px-2 py-0.5 text-xs font-semibold text-violet-600">
-                    {badge > 99 ? "99+" : badge}
+                    {unreadCount > 99 ? "99+" : unreadCount}
                   </span>
                 )}
               </>
             )}
           </NavLink>
-        ))}
-      </nav>
-
-      {/* NOTIFICATIONS */}
-      <div className="mt-3">
-        <NavLink
-          to={link("/notifications")}
-          className={({ isActive }) =>
-            `group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition ${
-              isActive
-                ? "bg-slate-900 text-white shadow-sm"
-                : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-            }`
-          }
-        >
-          {({ isActive }) => (
-            <>
-              <Bell
-                size={19}
-                className={
-                  isActive
-                    ? "text-white"
-                    : "text-slate-500 group-hover:text-slate-900"
-                }
-              />
-
-              <span>Notifications</span>
-
-              {unreadCount > 0 && (
-                <span className="ml-auto rounded-full bg-violet-100 px-2 py-0.5 text-xs font-semibold text-violet-600">
-                  {unreadCount > 99 ? "99+" : unreadCount}
-                </span>
-              )}
-            </>
-          )}
-        </NavLink>
-      </div>
-    </aside>
+        </div>
+      </aside>
+    </>
   );
 }
