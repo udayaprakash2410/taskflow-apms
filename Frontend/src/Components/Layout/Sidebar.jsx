@@ -196,10 +196,7 @@ export default function Sidebar() {
       fetchUnreadCount();
     };
 
-    window.addEventListener(
-      "notificationUpdated",
-      handleNotificationUpdate
-    );
+    window.addEventListener("notificationUpdated", handleNotificationUpdate);
 
     return () => {
       window.removeEventListener(
@@ -415,7 +412,7 @@ export default function Sidebar() {
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex w-72 flex-col overflow-y-auto border-r border-slate-200 bg-white p-5 transition-transform duration-300 lg:static lg:z-auto lg:flex lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 flex w-72 flex-col overflow-y-auto border-r border-slate-200 bg-white p-5 transition-transform duration-300 lg:fixed lg:z-auto lg:flex lg:translate-x-0 ${
           mobileOpen
             ? "translate-x-0"
             : "-translate-x-full lg:translate-x-0"
